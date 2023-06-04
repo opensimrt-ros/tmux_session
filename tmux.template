@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+#
+# @author      : {{NAME}} ({{EMAIL}})
+# @file        : {{FILE}}
+# @created     : {{TIMESTAMP}}
+#
+SESSION_NAME=test
+
+##boilerplate
+source "`rospack find tmux_session_core`/common_functions.bash"
+ros_core_tmux "$SESSION_NAME"
+
+# Example usage:
+W1=(
+	"ls "
+	"ls"
+	"ls"
+	"ls"
+	"ls"
+	"ls"
+	"ls"
+	"ls"
+	"ls"
+)
+
+W2=(
+	"ls "
+	"ls"
+	"ls"
+	"ls"
+	"ls"
+	"ls"
+	"ls"
+	"ls"
+	"ls"
+)
+#more if you want....
+
+create_tmux_window "$SESSION_NAME" "my_window1" "${W1[@]}"
+create_tmux_window "$SESSION_NAME" "my_window2" "${W2[@]}"
+#more if you want....
+
+tmux -2 a -t $SESSION_NAME
+
