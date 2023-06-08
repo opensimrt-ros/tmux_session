@@ -1,29 +1,28 @@
 #!/usr/bin/env bash
+SESSION_NAME=single_imu_lowerbody
 
-tmux new-session -s mysession -d 
-tmux set-option -s -t mysession default-command "bash --rcfile ~/.bashrc_ws.sh"
-tmux send -t mysession:0.0 "roscore" C-m
-sleep 2
+source "`rospack find tmux_session_core`/common_functions.bash"
+ros_core_tmux "$SESSION_NAME"
 
-tmux new-window
-tmux select-window -t 1
-tmux split-window -h 
-tmux split-window -h 
-tmux select-layout even-horizontal
+W1=(
+"roslaunch osrt_ros ik_lowerbody_inverted_pelvis.launch"
+"roslaunch ximu3_ros ximu_as_pelvis.launch"
+"roslaunch osrt_ros lower_body_tfs_pelvis.launch"
+)
+#"roslaunch osrt_ros agrfm.launch" 
+#"roslaunch opensimrt_bridge ik_acceleration_prediction_gfrm.launch" 
+#"rosrun rqt_graph rqt_graph" 
+#"rosservice call /inverse_kinematics_from_file/start" 
 
-tmux send -t mysession:1.0 "roslaunch osrt_ros ik_lowerbody_inverted_pelvis.launch" C-m
-tmux send -t mysession:1.1 "roslaunch ximu3_ros ximu_as_pelvis.launch" C-m
-tmux send -t mysession:1.2 "roslaunch osrt_ros lower_body_tfs_pelvis.launch" C-m
-#tmux send -t mysession:1.3 "roslaunch osrt_ros agrfm.launch" C-m
-#tmux send -t mysession:1.4 "roslaunch opensimrt_bridge ik_acceleration_prediction_gfrm.launch" C-m
-#tmux send -t mysession:1.5 "rosrun rqt_graph rqt_graph" C-m
-#tmux send -t mysession:1.6 "rosservice call /inverse_kinematics_from_file/start" C-m
+#"cd /catkin_opensim/src/opensimrt_core/OpenSimRT/Pipeline; nv" 
+#"cd /catkin_opensim/src/opensimrt_core/launch; nv" 
 
-#tmux send -t mysession:2.0 "cd /catkin_opensim/src/opensimrt_core/OpenSimRT/Pipeline; nv" C-m
-#tmux send -t mysession:3.0 "cd /catkin_opensim/src/opensimrt_core/launch; nv" C-m
-
-#tmux send -t mysession:1.6 "ls -la" C-m
-#tmux send -t mysession:1.7 "ls -la" C-m
+#"ls -la" 
+#"ls -la" 
 #tmux setw synchronize-panes on
 
-tmux -2 a -t mysession
+create_tmux_window "$SESSION_NAME" "my_window1" "${W1[@]}"
+
+tmux -2 a -t $SESSION_NAME
+
+
