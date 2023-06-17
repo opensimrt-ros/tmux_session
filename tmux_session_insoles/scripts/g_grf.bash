@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 cd ~
-rqt_plot \
+rqt_plot -e \
 	/id_node/debug_grf_left/data[0] \
 	/id_node/debug_grf_left/data[1] \
 	/id_node/debug_grf_left/data[2] \
