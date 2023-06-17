@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-SESSION_NAME=insole_slow
+SESSION_NAME=insole
 
 source "`rospack find tmux_session_core`/common_functions.bash"
-ros_core_tmux_slow "$SESSION_NAME"
+ros_core_tmux "$SESSION_NAME"
 
 tmux set -g pane-border-status top
 
@@ -24,7 +24,7 @@ W2=(
 "sleep 2; rosservice call /id_node/set_name_and_path \"{name: 's2_id_walking_filtered_', path: '/catkin_ws/tmp/02' }\" --wait" 
 )
 W3=(
-"#rosrun osrt_ros graph_tau_id_1992.bash" 
+"rosrun osrt_ros graph_tau_id_1992.bash" 
 "#rostopic hz /ik/output"
 "#rostopic echo /id_node/debug_cop_left"
 "#rostopic echo /id_node/debug_cop_right"
@@ -33,12 +33,12 @@ W3=(
 "#rostopic echo /id_node/debug_ik"
 "#rosrun moticon_insoles graph_grfs_republished.bash --wait" 
 "#sleep 4.1; rosrun tf view_frames"
-"#rosbag record /id_node/output"
+"rosbag record /id_node/output"
 )
 W4=(
 "#rosrun tmux_session_insoles g_ik.bash"
 "#rosrun tmux_session_insoles g_grf.bash"
-"rosrun tmux_session_insoles g_cop.bash"
+"#rosrun tmux_session_insoles g_cop.bash"
 "sleep 20; rosservice call /id_node/stop_recording ; rosservice call /id_node/write_sto" 
 )
 W5=(
