@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<launch>
+	<arg name="action_path" default="/catkin_ws/Data/test_ar_imu/trunk_forward"/>
+	<arg name="async_run" default="false"/>
+	<include file="$(find opensimrt_bridge)/launch/ik_upper_arm.launch" ns="ar" >
+		<arg name="ik_file" value="$(arg action_path)/0_ar_ik4_ik_ar_upper.sto" />
+		<arg name="async_run" value="$(arg async_run)"/>
+	</include>
+	<include file="$(find opensimrt_bridge)/launch/ik_upper_arm.launch" ns="imu" >
+		<arg name="ik_file" value="$(arg action_path)/0_imu_ik4_ik_imu_upper.sto" />
+		<arg name="async_run" value="$(arg async_run)"/>
+	</include>
+
+</launch>
+

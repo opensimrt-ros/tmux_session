@@ -26,7 +26,7 @@ tmux split-window -v -p 50
 #sends keys to first and second terminals
 tmux send -t ar_acer_session:1.0 "rviz -d /catkin_ws/_cam_acer_tf.rviz" C-m
  #rviz -d ./_default.rviz
-tmux send -t ar_acer_session:1.1 "roslaunch ar_test ar_cube_acer.launch" C-m
+tmux send -t ar_acer_session:1.1 "roslaunch ar_test ar_acer_upperarm.launch" C-m
 tmux send -t ar_acer_session:1.2 "roslaunch ar_test acer_video_stream.launch" C-m
 tmux send -t ar_acer_session:1.3 "ROS_NAMESPACE=usb_cam_acer rosrun image_proc image_proc" C-m
 #tmux send -t ar_acer_session:1.4 "roslaunch moticon_insoles see_wrench.launch" C-m
