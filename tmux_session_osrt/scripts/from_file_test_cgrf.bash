@@ -26,7 +26,7 @@ tmux split-window -v -p 50
 tmux send -t mysession:1.0 "rostopic echo /ik/output" C-m
 tmux send -t mysession:1.1 "rostopic echo /grf_node/output" C-m
 tmux send -t mysession:1.3 "roslaunch osrt_ros cgrfm_as_grf.launch" C-m
-tmux send -t mysession:1.4 "roslaunch osrt_ros ik_bare.launch" C-m
+tmux send -t mysession:1.4 "roslaunch osrt_ros ik_bare_2392.launch" C-m
 
 tmux send -t mysession:1.5 "rosrun rqt_graph rqt_graph" C-m
 tmux send -t mysession:1.6 "sleep 2; rosservice call /inverse_kinematics_from_file/start" C-m

@@ -1,49 +1,25 @@
 #!/usr/bin/env bash
 
-tmux new-session -s mysession -d 
-tmux set-option -s -t mysession default-command "bash --rcfile ~/.bashrc_ws.sh"
-tmux send -t mysession:0.0 "roscore" C-m
-sleep 2
+SESSION_NAME=so_round_robin
 
-tmux new-window
-tmux new-window
-tmux new-window
-tmux select-window -t 1
-tmux split-window -h 
-tmux split-window -h 
-tmux split-window -h 
-tmux select-layout even-horizontal
-tmux select-pane -t 3
-tmux split-window -v -p 50 
-tmux select-pane -t 2
-tmux split-window -v -p 50 
-tmux select-pane -t 1 
-tmux split-window -v -p 50 
-tmux select-pane -t 0
-tmux split-window -v -p 50 
-#tmux select-layout tiled
-#tmux select-pane -t 0
+source "`rospack find tmux_session_core`/common_functions.bash"
+#ros_core_tmux_slow "$SESSION_NAME"
+ros_core_tmux "$SESSION_NAME"
 
-#sends keys to first and second terminals
-tmux send -t mysession:1.0 "rostopic hz /so_rr_node/output_multi" C-m
-#tmux send -t mysession:1.0 "rostopic echo /so_rr_node/output_combined" C-m
-#tmux send -t mysession:1.1 "rostopic echo /grf_node/output" C-m
-tmux send -t mysession:1.1 "roslaunch osrt_ros so_round_robin_filtered_multi.launch" C-m
-tmux send -t mysession:1.2 "roslaunch osrt_ros id_filtered.launch" C-m
-	
-tmux send -t mysession:1.3 "roslaunch osrt_ros agrfm_as_grf.launch model_file:=/srv/data/gait1992/residual_reduction_algorithm/model_adjusted.osim" C-m
-tmux send -t mysession:1.4 "roslaunch osrt_ros ik_bare_1992.launch loops:=1900 " C-m
-#tmux send -t mysession:1.4 "roslaunch osrt_ros ik_bare_1992.launch rate_divider:=3" C-m
+tmux set -g pane-border-status top
 
-tmux send -t mysession:1.5 "rosrun rqt_graph rqt_graph" C-m
-tmux send -t mysession:1.6 "sleep 2; rosservice call /inverse_kinematics_from_file/start" C-m
-tmux send -t mysession:1.7 "roslaunch osrt_ros vis_so_rr_multi.launch" C-m
+W1=(
+"rostopic hz /so_rr_node/output_multi" 
+"roslaunch osrt_ros so_round_robin_filtered_multi.launch" 
+"roslaunch osrt_ros id_filtered.launch use_exact_sync:=true" 
+"#roslaunch osrt_ros agrfm_as_grf.launch model_file:=/srv/data/gait1992/residual_reduction_algorithm/model_adjusted.osim" 
+"roslaunch osrt_ros agrfm_filtered_as_grf.launch model_file:=/srv/data/gait1992/residual_reduction_algorithm/model_adjusted.osim" 
+"roslaunch osrt_ros ik_bare_1992.launch loops:=1900 " 
+"rosrun rqt_graph rqt_graph" 
+"sleep 2; rosservice call /inverse_kinematics_from_file/start" 
+"roslaunch osrt_ros vis_so_rr_multi.launch" 
+)
 
-tmux send -t mysession:2.0 "cd /catkin_ws/src/osrt_ros/src/Pipeline; nv" C-m
-tmux send -t mysession:3.0 "cd /catkin_ws/src/osrt_ros/launch; nv" C-m
+create_tmux_window "$SESSION_NAME" "main_nodes" "${W1[@]}"
 
-#tmux send -t mysession:1.6 "ls -la" C-m
-#tmux send -t mysession:1.7 "ls -la" C-m
-#tmux setw synchronize-panes on
-
-tmux -2 a -t mysession
+tmux -2 a -t $SESSION_NAME
