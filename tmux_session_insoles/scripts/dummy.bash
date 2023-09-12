@@ -39,7 +39,7 @@ tmux send -t mysession:1.1 "rosrun osrt_ros graph_grfs.bash" C-m
 
 tmux send -t mysession:1.2 "roslaunch osrt_ros id_filtered.launch get_second_label:=false left_foot_tf_name:=left right_foot_tf_name:=right --wait" C-m
 tmux send -t mysession:1.3 "roslaunch moticon_insoles dummy_grfs.launch publish_calcaneous:=false --wait" C-m
-tmux send -t mysession:1.4 "roslaunch moticon_insoles play_ik.launch visualization:=false loops:=100 --wait" C-m
+tmux send -t mysession:1.4 "roslaunch moticon_insoles play_ik.launch visualization:=false simulation_loops:=100 --wait" C-m
 #tmux send -t mysession:1.5 "rosrun moticon_insoles service_mux.py" C-m
 #tmux send -t mysession:4.0 "roslaunch custom_clock custom_clock.launch" C-m
 #tmux send -t mysession:4.0 "sleep 10; rosservice call /id_node/stop_recording ; rosservice call /id_node/write_sto" C-m

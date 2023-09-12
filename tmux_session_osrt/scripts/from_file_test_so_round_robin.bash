@@ -14,7 +14,7 @@ W1=(
 "roslaunch osrt_ros id_filtered.launch use_exact_sync:=true" 
 "#roslaunch osrt_ros agrfm_as_grf.launch model_file:=/srv/data/gait1992/residual_reduction_algorithm/model_adjusted.osim" 
 "roslaunch osrt_ros agrfm_filtered_as_grf.launch model_file:=/srv/data/gait1992/residual_reduction_algorithm/model_adjusted.osim" 
-"roslaunch osrt_ros ik_bare_1992.launch loops:=1900 " 
+"roslaunch osrt_ros ik_bare_1992.launch simulation_loops:=1900 " 
 "rosrun rqt_graph rqt_graph" 
 "sleep 2; rosservice call /inverse_kinematics_from_file/start" 
 "roslaunch osrt_ros vis_so_rr_multi.launch" 

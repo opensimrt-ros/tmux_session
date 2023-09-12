@@ -23,7 +23,9 @@ W2=(
 "sleep 3; rosservice call /inverse_kinematics_from_file/start --wait " 
 "rqt_graph " 
 "sleep 2; rosservice call /id_node/start_recording --wait" 
+"sleep 2; rosservice call /so_visualization/start_recording --wait" 
 "sleep 2; rosservice call /id_node/set_name_and_path \"{name: 's2_id_walking_filtered_', path: '/catkin_ws/tmp/02' }\" --wait" 
+"sleep 2; rosservice call /so_visualization/set_name_and_path \"{name: 's2_id_walking_filtered_', path: '/catkin_ws/tmp/02' }\" --wait" 
 "roslaunch osrt_ros vis_so_rr_multi.launch"
 )
 W3=(
