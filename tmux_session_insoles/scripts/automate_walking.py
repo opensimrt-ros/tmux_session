@@ -35,6 +35,9 @@ parameter_tuples = [
 
 action="walking"
 
+#id_launcher="id_async_filtered.launch"
+id_launcher="id_async_filtered_calcn_references.launch"
+
 def cleanup_subprocesses():
     subprocess.run(["tmux", "kill-session"])
 # Path to your bash script
@@ -43,7 +46,7 @@ bash_script_path = 'GENERATE_ID_CURVE_SCRIPT.bash'
 # Loop through the parameter tuples and run the subprocess
 for i, (insole_file, ik_file, subjectnum) in enumerate(parameter_tuples):
     print(i, insole_file, ik_file)
-    command = ['/opt/ros/noetic/bin/rosrun', 'tmux_session_insoles', bash_script_path, insole_file, ik_file, str(i), subjectnum, action]
+    command = ['/opt/ros/noetic/bin/rosrun', 'tmux_session_insoles', bash_script_path, insole_file, ik_file, str(i), subjectnum, action, id_launcher]
 
     try:
         # Use timeout_decorator.timeout to enforce timeout

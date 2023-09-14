@@ -14,14 +14,19 @@ IK_DATA_FILE=/catkin_ws/Data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2/
 MODEL_FILE=/catkin_ws/Data/02_ruoli/gait2392_simbody_RW.osim
 MOMENT_ARM_LIB=/catkin_ws/devel/lib/Gait2392MomentArm_RW
 #MODEL_FILE=/catkin_ws/src/gait1992_description/models/model_generic_1992_disabled_vis.osim
+SUBJECT_NUM=02
+ACTION=walking
+ACTION_NUM=1
+ID_NODE_LAUNCH=id_async_filtered_calcn_references.launch
 #MODEL_FILE=/catkin_ws/src/gait1992_description/models/model_generic_19xx/model_generic19xx.osim
+
+
 W1=(
-"roslaunch osrt_ros id_async_filtered_calcn_references.launch get_second_label:=false left_foot_tf_name:=left_filtered right_foot_tf_name:=right_filtered model_file:=$MODEL_FILE --wait" 
+"roslaunch osrt_ros ${ID_NODE_LAUNCH} get_second_label:=false left_foot_tf_name:=left_filtered right_foot_tf_name:=right_filtered model_file:=$MODEL_FILE --wait" 
 "roslaunch moticon_insoles feet_wrench_and_ik_from_file.launch filename:=$INSOLE_DATA_FILE publish_transforms:=false output_left:=/grf_left/unfiltered output_right:=/grf_right/unfiltered estimated_delay:=0.0 foot_length:=0.2486 foot_width:=0.0902 --wait" 
 "roslaunch moticon_insoles play_ik_2392.launch filename:=$IK_DATA_FILE --wait" 
-"roslaunch republisher republisher_sync_insoles.launch wrench_delay:=0.14 debug_publish_zero_cop:=false debug_publish_fixed_force:=false --wait" 
+"roslaunch republisher republisher_sync_insoles.launch wrench_delay:=0.1 debug_publish_zero_cop:=false debug_publish_fixed_force:=false --wait" 
 "roslaunch osrt_ros so_round_robin_filtered_multi.launch n_proc:=4 model_file:=$MODEL_FILE moment_arm_library_path:=$MOMENT_ARM_LIB"
-"rostopic echo /id_node/output_multi"
 )
 W2=(
 "rosservice call /ik/outlabels --wait" 
@@ -30,16 +35,39 @@ W2=(
 "rqt_graph " 
 "sleep 2; rosservice call /id_node/start_recording --wait" 
 "sleep 2; rosservice call /so_visualization/start_recording --wait" 
-"sleep 2; rosservice call /id_node/set_name_and_path \"{name: 's2_id_walking_filtered_', path: '/catkin_ws/tmp/02' }\" --wait" 
-"sleep 2; rosservice call /so_visualization/set_name_and_path \"{name: 's2_so_walking_filtered_', path: '/catkin_ws/tmp/02' }\" --wait" 
-"roslaunch osrt_ros vis_so_rr_multi.launch model_file:=$MODEL_FILE "
+"sleep 2; rosservice call /id_node/set_name_and_path \"{name: 's${SUBJECT_NUM}_id_${ACTION}_filtered_SCRIPT${ACTION_NUM}_', path: '/tmp/${SUBJECT_NUM}' }\" --wait" 
+"sleep 2; rosservice call /so_visualization/set_name_and_path \"{name: 's${SUBJECT_NUM}_id_${ACTION}_filtered_SCRIPT${ACTION_NUM}_', path: '/tmp/${SUBJECT_NUM}' }\" --wait" 
 )
 W3=(
+"rosrun osrt_ros graph_tau_id_1992.bash" 
+"#rostopic hz /ik/output"
+"#rostopic echo /id_node/debug_cop_left"
+"#rostopic echo /id_node/debug_cop_right"
+"#rostopic echo /id_node/debug_grf_left"
+"#rostopic echo /id_node/debug_grf_right"
+"#rostopic echo /id_node/debug_ik"
+"#rosrun moticon_insoles graph_grfs_republished.bash --wait" 
+"#sleep 4.1; rosrun tf view_frames"
+#"rosbag record /id_node/output"
 )
+W4=(
+"roslaunch osrt_ros vis_so_rr_multi.launch model_file:=$MODEL_FILE "
+"#rosrun tmux_session_insoles g_ik.bash"
+"#rosrun tmux_session_insoles g_grf.bash"
+"#rosrun tmux_session_insoles g_cop.bash"
+"sleep 20; rosservice call /id_node/stop_recording ; rosservice call /id_node/write_sto" 
+"sleep 20; rosservice call /so_visualization/stop_recording ; rosservice call /so_visualization/write_sto" 
+)
+W5=(
+
+	)
 create_tmux_window "$SESSION_NAME" "sync" "${W2[@]}"
+create_tmux_window "$SESSION_NAME" "vis" 	"${W3[@]}"
+create_tmux_window "$SESSION_NAME" "vis2" 	"${W4[@]}"
 create_tmux_window "$SESSION_NAME" "main_nodes" "${W1[@]}"
 
 tmux -2 a -t $SESSION_NAME
+
 
 
 
