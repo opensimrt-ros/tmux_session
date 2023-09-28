@@ -15,6 +15,16 @@ ros_core_tmux()
 
 }
 
+ros_core_tmux_clock()
+{
+	local session="$1"
+	ros_core_tmux $session
+	tmux split-window -h -t "$session"
+	tmux send -t $session:0.2 "rosparam set /use_sim_time true" C-m
+	#tmux split-window -h -t "$session"
+	#tmux send -t $session:0.3 "rostopic echo /clock" C-m
+
+}
 ros_core_tmux_slow()
 {
 	local session="$1"
