@@ -34,13 +34,13 @@ W1=(
 "roslaunch moticon_insoles feet_wrench_and_ik_from_file.launch filename:=$INSOLE_DATA_FILE publish_transforms:=false output_left:=/grf_left/unfiltered output_right:=/grf_right/unfiltered estimated_delay:=0.0 foot_length:=0.2486 foot_width:=0.0902 grf_origin_z_offset:=$GRF_ORIGIN_Z_OFFSET start_time:=$INSOLE_START_TIME --wait" 
 "roslaunch moticon_insoles play_ik_2392.launch model_file:=$MODEL_FILE filename:=$IK_DATA_FILE start_at_secs:=$IK_START_SECS start_at_nsecs:=$IK_START_NSECS --wait" 
 "roslaunch republisher republisher_sync_insoles.launch wrench_delay:=$WRENCH_DELAY debug_publish_zero_cop:=false debug_publish_fixed_force:=false --wait" 
-#"roslaunch osrt_ros so_round_robin_filtered_multi.launch n_proc:=4 model_file:=$MODEL_FILE moment_arm_library_path:=$MOMENT_ARM_LIB"
+"roslaunch osrt_ros so_round_robin_filtered_multi.launch n_proc:=4 model_file:=$MODEL_FILE moment_arm_library_path:=$MOMENT_ARM_LIB"
 "roslaunch custom_clock back_in_time_clock.launch start_at_secs:=$CLOCK_START_SECS start_at_nsecs:=$CLOCK_START_NSECS clock_step_microsseconds:=1000 slowdown_rate:=1" 
 "roswtf" 
 )
 W2=(
 "rosservice call /id_node/set_name_and_path \"{name: 's${SUBJECT_NUM}_id_${ACTION}_filtered_SCRIPT${ACTION_NUM}_', path: '/tmp/${SUBJECT_NUM}' }\" --wait" 
-#"rosservice call /so_visualization/set_name_and_path \"{name: 's${SUBJECT_NUM}_id_${ACTION}_filtered_SCRIPT${ACTION_NUM}_', path: '/tmp/${SUBJECT_NUM}' }\" --wait" 
+"rosservice call /so_visualization/set_name_and_path \"{name: 's${SUBJECT_NUM}_id_${ACTION}_filtered_SCRIPT${ACTION_NUM}_', path: '/tmp/${SUBJECT_NUM}' }\" --wait" 
 "rosservice call /id_node/start_recording --wait" 
 "rosservice call /ik/outlabels --wait" 
 "rosservice call /moticon_insoles/start_playback --wait" 
@@ -70,12 +70,12 @@ W3=(
 #"rosbag record /id_node/output"
 )
 W4=(
-#"roslaunch osrt_ros vis_so_rr_multi.launch model_file:=$MODEL_FILE "
+"roslaunch osrt_ros vis_so_rr_multi.launch model_file:=$MODEL_FILE "
 "#rosrun tmux_session_insoles g_ik.bash"
 "#rosrun tmux_session_insoles g_grf.bash"
 "#rosrun tmux_session_insoles g_cop.bash"
 "sleep 20; rosservice call /id_node/stop_recording ; rosservice call /id_node/write_sto" 
-#"sleep 20; rosservice call /so_visualization/stop_recording ; rosservice call /so_visualization/write_sto" 
+"sleep 20; rosservice call /so_visualization/stop_recording ; rosservice call /so_visualization/write_sto" 
 )
 W5=(
 
