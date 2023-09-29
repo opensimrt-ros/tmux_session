@@ -35,10 +35,11 @@ W1=(
 "roslaunch moticon_insoles play_ik_2392.launch model_file:=$MODEL_FILE filename:=$IK_DATA_FILE start_at_secs:=$IK_START_SECS start_at_nsecs:=$IK_START_NSECS --wait" 
 "roslaunch republisher republisher_sync_insoles.launch wrench_delay:=$WRENCH_DELAY debug_publish_zero_cop:=false debug_publish_fixed_force:=false --wait" 
 "roslaunch osrt_ros so_round_robin_filtered_multi.launch n_proc:=4 model_file:=$MODEL_FILE moment_arm_library_path:=$MOMENT_ARM_LIB"
-"roslaunch custom_clock back_in_time_clock.launch start_at_secs:=$CLOCK_START_SECS start_at_nsecs:=$CLOCK_START_NSECS clock_step_microsseconds:=1000 slowdown_rate:=1" 
-"roswtf" 
+"roslaunch custom_clock back_in_time_clock.launch start_at_secs:=$CLOCK_START_SECS start_at_nsecs:=$CLOCK_START_NSECS clock_step_microsseconds:=2000 slowdown_rate:=1" 
+#"roswtf" 
 )
 W2=(
+"rosbag record /id_node/output -O /tmp/${SUBJECT_NUM}/id_output_${ACTION}_${ACTION_NUM} --duration=30"
 "rosservice call /id_node/set_name_and_path \"{name: 's${SUBJECT_NUM}_id_${ACTION}_filtered_SCRIPT${ACTION_NUM}_', path: '/tmp/${SUBJECT_NUM}' }\" --wait" 
 "rosservice call /so_visualization/set_name_and_path \"{name: 's${SUBJECT_NUM}_id_${ACTION}_filtered_SCRIPT${ACTION_NUM}_', path: '/tmp/${SUBJECT_NUM}' }\" --wait" 
 "rosservice call /id_node/start_recording --wait" 
@@ -48,7 +49,7 @@ W2=(
 #"rosservice call /inverse_kinematics_from_file/start_at --wait; sleep 2; rosservice call /id_node/stop_recording ; rosservice call /id_node/write_sto" 
 "rosservice call /inverse_kinematics_from_file/start_at --wait" 
 "rqt_graph " 
-#"rosservice call /so_visualization/start_recording --wait" 
+"rosservice call /so_visualization/start_recording --wait" 
 )
 W3=(
 #"rosrun osrt_ros graph_tau_id_1992.bash" 
@@ -67,7 +68,6 @@ W3=(
 #"rostopic echo /id_node/debug_ik"
 #"rosrun moticon_insoles graph_grfs_republished.bash --wait" 
 #"sleep 4.1; rosrun tf view_frames"
-#"rosbag record /id_node/output"
 )
 W4=(
 "roslaunch osrt_ros vis_so_rr_multi.launch model_file:=$MODEL_FILE "
@@ -80,10 +80,10 @@ W4=(
 W5=(
 
 	)
-create_tmux_window "$SESSION_NAME" "main_nodes" "${W1[@]}"
 create_tmux_window "$SESSION_NAME" "sync" "${W2[@]}"
 create_tmux_window "$SESSION_NAME" "vis2" 	"${W4[@]}"
 #create_tmux_window "$SESSION_NAME" "vis" 	"${W3[@]}"
+create_tmux_window "$SESSION_NAME" "main_nodes" "${W1[@]}"
 
 tmux -2 a -t $SESSION_NAME
 
