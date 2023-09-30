@@ -24,6 +24,9 @@ IK_START_SECS=$8
 IK_START_NSECS=$9
 CLOCK_START_SECS=${10}
 CLOCK_START_NSECS=${11}
+TIMEOUT_TIME=${12}
+TIMEOUT_BAG_FILE_SAVE_TIME=$(expr $TIMEOUT_TIME - 10)
+TIMEOUT_STO_SAVER_NODES=$(expr $TIMEOUT_TIME / 2)
 ## it seems like we are messing up with the publish_transforms=false, but we are actually republishing the values using the combined message with everything from the insoles, so it is okay
 ## another caveat is that the insoles delay is being completely overlooked by the republisher node which has its own delay for publishing onld COP transforms, so we set it to zero. 
 ## looking at the transforms for the wrench in rviz will also be wrong because we publish transformations that are backstamped, so they will show it in a past robot that doesnt exist anymore.
@@ -35,11 +38,11 @@ W1=(
 "roslaunch moticon_insoles play_ik_2392.launch model_file:=$MODEL_FILE filename:=$IK_DATA_FILE start_at_secs:=$IK_START_SECS start_at_nsecs:=$IK_START_NSECS --wait" 
 "roslaunch republisher republisher_sync_insoles.launch wrench_delay:=$WRENCH_DELAY debug_publish_zero_cop:=false debug_publish_fixed_force:=false --wait" 
 "roslaunch osrt_ros so_round_robin_filtered_multi.launch n_proc:=4 model_file:=$MODEL_FILE moment_arm_library_path:=$MOMENT_ARM_LIB"
-"roslaunch custom_clock back_in_time_clock.launch start_at_secs:=$CLOCK_START_SECS start_at_nsecs:=$CLOCK_START_NSECS clock_step_microsseconds:=2000 slowdown_rate:=1" 
+"roslaunch custom_clock back_in_time_clock.launch start_at_secs:=$CLOCK_START_SECS start_at_nsecs:=$CLOCK_START_NSECS clock_step_microsseconds:=1000 slowdown_rate:=1" 
 #"roswtf" 
 )
 W2=(
-"rosbag record /id_node/output -O /tmp/${SUBJECT_NUM}/id_output_${ACTION}_${ACTION_NUM} --duration=30"
+"rosbag record /id_node/output -O /tmp/${SUBJECT_NUM}/id_output_${ACTION}_${ACTION_NUM} --duration=${TIMEOUT_BAG_FILE_SAVE_TIME}"
 "rosservice call /id_node/set_name_and_path \"{name: 's${SUBJECT_NUM}_id_${ACTION}_filtered_SCRIPT${ACTION_NUM}_', path: '/tmp/${SUBJECT_NUM}' }\" --wait" 
 "rosservice call /so_visualization/set_name_and_path \"{name: 's${SUBJECT_NUM}_id_${ACTION}_filtered_SCRIPT${ACTION_NUM}_', path: '/tmp/${SUBJECT_NUM}' }\" --wait" 
 "rosservice call /id_node/start_recording --wait" 
@@ -74,8 +77,8 @@ W4=(
 "#rosrun tmux_session_insoles g_ik.bash"
 "#rosrun tmux_session_insoles g_grf.bash"
 "#rosrun tmux_session_insoles g_cop.bash"
-"sleep 20; rosservice call /id_node/stop_recording ; rosservice call /id_node/write_sto" 
-"sleep 20; rosservice call /so_visualization/stop_recording ; rosservice call /so_visualization/write_sto" 
+"sleep ${TIMEOUT_STO_SAVER_NODES}; rosservice call /id_node/stop_recording ; rosservice call /id_node/write_sto" 
+"sleep ${TIMEOUT_STO_SAVER_NODES}; rosservice call /so_visualization/stop_recording ; rosservice call /so_visualization/write_sto" 
 )
 W5=(
 
