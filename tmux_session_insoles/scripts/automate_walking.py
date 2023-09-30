@@ -69,6 +69,8 @@ bash_script_path = 'GENERATE_ID_CURVE_SCRIPT.bash'
 USE_TIMEOUT=True
 #USE_TIMEOUT=False
 
+timeout_time = 40
+#timeout_time = 80
 
 # Loop through the parameter tuples and run the subprocess
 for i, (insole_file, ik_file, subjectnum) in enumerate(parameter_tuples):
@@ -78,12 +80,13 @@ for i, (insole_file, ik_file, subjectnum) in enumerate(parameter_tuples):
             str(ik_start[i][0]), 
             str(ik_start[i][1]), 
             str(clock_start[i][0]), 
-            str(clock_start[i][1])
+            str(clock_start[i][1]),
+            str(timeout_time)
             ]
 
     try:
         # Use timeout_decorator.timeout to enforce timeout
-        @timeout_decorator.timeout(40)  # 40 seconds timeout
+        @timeout_decorator.timeout(timeout_time)  # N seconds timeout
         def run_subprocess():
             subprocess.run(command, check=True)
 
