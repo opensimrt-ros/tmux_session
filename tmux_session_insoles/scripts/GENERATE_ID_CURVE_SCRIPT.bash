@@ -33,12 +33,12 @@ TIMEOUT_STO_SAVER_NODES=$(expr $TIMEOUT_TIME / 2)
 
 #"roslaunch moticon_insoles play_ik.launch filename:=$IK_DATA_FILE --wait" 
 W1=(
-"roslaunch osrt_ros ${ID_NODE_LAUNCH} get_second_label:=false left_foot_tf_name:=left_filtered right_foot_tf_name:=right_filtered model_file:=$MODEL_FILE max_buffer_length:=40 --wait" 
+"roslaunch osrt_ros ${ID_NODE_LAUNCH} get_second_label:=false left_foot_tf_name:=left_filtered right_foot_tf_name:=right_filtered model_file:=$MODEL_FILE max_buffer_length:=100 --wait" 
 "roslaunch moticon_insoles feet_wrench_and_ik_from_file.launch filename:=$INSOLE_DATA_FILE publish_transforms:=false output_left:=/grf_left/unfiltered output_right:=/grf_right/unfiltered estimated_delay:=0.0 foot_length:=0.2486 foot_width:=0.0902 grf_origin_z_offset:=$GRF_ORIGIN_Z_OFFSET start_time:=$INSOLE_START_TIME --wait" 
 "roslaunch moticon_insoles play_ik_2392.launch model_file:=$MODEL_FILE filename:=$IK_DATA_FILE start_at_secs:=$IK_START_SECS start_at_nsecs:=$IK_START_NSECS --wait" 
 "roslaunch republisher republisher_sync_insoles.launch wrench_delay:=$WRENCH_DELAY debug_publish_zero_cop:=false debug_publish_fixed_force:=false --wait" 
 "roslaunch osrt_ros so_round_robin_filtered_multi.launch n_proc:=4 model_file:=$MODEL_FILE moment_arm_library_path:=$MOMENT_ARM_LIB"
-"roslaunch custom_clock back_in_time_clock.launch start_at_secs:=$CLOCK_START_SECS start_at_nsecs:=$CLOCK_START_NSECS clock_step_microsseconds:=1000 slowdown_rate:=1" 
+"roslaunch custom_clock simpler_clock.launch start_at_secs:=$CLOCK_START_SECS start_at_nsecs:=$CLOCK_START_NSECS clock_step_microsseconds:=1000 slowdown_rate:=1" 
 #"roswtf" 
 )
 W2=(
@@ -77,6 +77,7 @@ W4=(
 "#rosrun tmux_session_insoles g_ik.bash"
 "#rosrun tmux_session_insoles g_grf.bash"
 "#rosrun tmux_session_insoles g_cop.bash"
+"rosrun osrt_ros graph_iks_old_filtered.bash"
 "sleep ${TIMEOUT_STO_SAVER_NODES}; rosservice call /id_node/stop_recording ; rosservice call /id_node/write_sto" 
 "sleep ${TIMEOUT_STO_SAVER_NODES}; rosservice call /so_visualization/stop_recording ; rosservice call /so_visualization/write_sto" 
 )
