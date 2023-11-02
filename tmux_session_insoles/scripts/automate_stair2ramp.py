@@ -10,34 +10,59 @@ import shutil
 USE_TIMEOUT=True
 #USE_TIMEOUT=False
 
-timeout_time = 60
+timeout_time = 65
 #timeout_time = 80
 
 sample_notebook="standard_analysis.ipynb"
 
 
-common_path ='/catkin_ws/Data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2' 
-fff = [
- "2023-03-03-12-01-00squat8_ik_lower.sto",
- "2023-03-03-12-03-09squat029_ik_lower.sto",
-]
+common_path = "/catkin_ws/Data/06_r_with_ramp/ViconData/Ruoli/Motion_Insole/RealTimeIkIDS2_ramp"
+
+fff = ['2023-03-28-10-01-07stair2ramp017_ik_lower.sto',
+	 '2023-03-28-10-01-33stair2ramp028_ik_lower.sto',
+	 '2023-03-28-10-01-55stair2ramp039_ik_lower.sto',
+	 '2023-03-28-10-02-19stair2ramp0410_ik_lower.sto',
+	 '2023-03-28-10-02-43stair2ramp0511_ik_lower.sto',
+	 '2023-03-28-10-03-41stair2ramp0612_ik_lower.sto']
 parameter_tuples = [
-    ('%s/squat_header_corrected.txt'%common_path, '%s/%s'%(common_path,fff[0]),"02"),
-    ('%s/squat02_header_corrected.txt'%common_path, '%s/%s'%(common_path,fff[1]),"02"),
-    #('value1b', 'value2b'),
+('%s/stair2ramp01_header_corrected.txt'%common_path,'%s/%s'%(common_path,fff[0]),'02'),
+('%s/stair2ramp02_header_corrected.txt'%common_path,'%s/%s'%(common_path,fff[1]),'02'),
+('%s/stair2ramp03_header_corrected.txt'%common_path,'%s/%s'%(common_path,fff[2]),'02'),
+('%s/stair2ramp04_header_corrected.txt'%common_path,'%s/%s'%(common_path,fff[3]),'02'),
+('%s/stair2ramp05_header_corrected.txt'%common_path,'%s/%s'%(common_path,fff[4]),'02'),
+('%s/stair2ramp06_header_corrected.txt'%common_path,'%s/%s'%(common_path,fff[5]),'02'),
 ]
 
-insole_start = [1677844860.441777,
-                1677844989.716777]
-ik_start = [(1677844860, 441776990),
-            (1677844989, 590431928)]
-clock_start = [(1677844859, 0),
-                (1677844988, 0)]
+insole_start = [1679997667.395009,
+	 1679997691.659009,
+	 1679997715.182009,
+	 1679997737.1830091,
+	 1679997760.7160091,
+	 1679997809.704009]
+ik_start = [(1679997667, 395009040),
+	 (1679997693, 21492004),
+	 (1679997715, 955077886),
+	 (1679997739, 383040904),
+	 (1679997763, 913403987),
+	 (1679997821, 288075923)]
+clock_start = [(1679997666, 0),
+	 (1679997690, 0),
+	 (1679997714, 0),
+	 (1679997736, 0),
+	 (1679997759, 0),
+	 (1679997808, 0)]
 
-
-
-action="squat"
-
+# So we assume that for each session the clocks of the insoles are running true. If not then each trial needs to be synchronized manually, this would mean a list of insole_diffs
+# This is not a realistic fix though and only works on playback, we may also break the buffer from id while doing this if the delay is too large, since we need to fill the wrench buffer there, this may take quite a bit of fiddling.
+insole_diff = {
+        "RSECS":1679997667,
+        "RNSECS":395009000,
+        "RT0":7066318,
+        "LSECS":1679997667,
+        "LNSECS":395009000,
+        "LT0":7047153,
+        }
+action='stair2ramp'
 
 id_launcher="id_async_filtered.launch"
 #id_launcher="id_async_filtered_calcn_references.launch"
@@ -46,7 +71,8 @@ def cleanup_subprocesses():
     subprocess.run(["tmux", "kill-session"])
     time.sleep(3)
 # Path to your bash script
-bash_script_path = 'GENERATE_ID_CURVE_SCRIPT.bash'
+#bash_script_path = 'GENERATE_ID_CURVE_SCRIPT.bash'
+bash_script_path = 'HENERATE_ID_CURVE_SCRIPT.bash'
 
 
 
@@ -59,7 +85,13 @@ for i, (insole_file, ik_file, subjectnum) in enumerate(parameter_tuples):
             str(ik_start[i][1]), 
             str(clock_start[i][0]), 
             str(clock_start[i][1]),
-            str(timeout_time)
+            str(timeout_time), 
+            str(insole_diff["RSECS"]),
+            str(insole_diff["RNSECS"]),
+            str(insole_diff["RT0"]),
+            str(insole_diff["LSECS"]),
+            str(insole_diff["LNSECS"]),
+            str(insole_diff["LT0"]),
             ]
 
     try:
