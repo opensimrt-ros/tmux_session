@@ -6,10 +6,10 @@ ros_core_tmux()
 	tmux new-session -s $session -n "roscore" -d
 	tmux set-option -s -t $session default-command "bash --rcfile ~.bashrc"
 	tmux send -t $session:0.0 "roscore" C-m
+	until rostopic list 1>/dev/null; do sleep 0.1; done 
 	tmux split-window -h -t "$session"
 	tmux send -t $session:0.1 "rosrun tmux_session_core close_tmux_button.py --wait" C-m
 	#roscore ok?
-	until rostopic list 1>/dev/null; do sleep 0.1; done 
 	#sleep 2 
 
 
