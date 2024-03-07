@@ -30,6 +30,7 @@ tmux send -t ar_session:1.1 "roslaunch ar_test ar_acer_upperarm.launch" C-m
 tmux send -t ar_session:1.2 "roslaunch ar_test acer_video_stream.launch" C-m
 tmux send -t ar_session:1.3 "roslaunch osrt_ros ik_upper_both.launch " C-m
 tmux send -t ar_session:1.4 "roslaunch ximu3_ros ximu_upper.launch" C-m
+tmux send -t ar_session:1.5 "ROS_NAMESPACE=usb_cam_acer rosrun image_proc image_proc" C-m
 #tmux send -t ar_session:1.5 "roslaunch opensimrt	id.launch" C-m
 
 #tmux send -t ar_session:1.6 "ls -la" C-m
