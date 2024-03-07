@@ -44,22 +44,22 @@ parameter_tuples = [
 ]
 
 insole_start = [1677844584.722696,
-                1677844628.7246962,
+                1677844629.741650,
                 1677844672.127696,
                 1677844691.253696,
                 1677844712.5966961]
 
 ik_start = [(1677844584, 722696065),
-            (1677844629, 74165105),
-            (1677844672, 426554918),
-            (1677844691, 549890995),
-            (1677844712, 879657983)]
+            (1677844629, 741651050),
+            (1677844672, 126554918),
+            (1677844691, 259890995),
+            (1677844712, 599657983)]
 
-clock_start =[  (1677844583, 0),
-                (1677844628, 0),
-                (1677844671, 0),
-                (1677844690, 0),
-                (1677844711, 0)]
+clock_start =[  (1677844581, 0),
+                (1677844627, 0),
+                (1677844669, 0),
+                (1677844689, 0),
+                (1677844709, 0)]
 
 action="walking"
 
@@ -107,11 +107,13 @@ for i, (insole_file, ik_file, subjectnum) in enumerate(parameter_tuples):
 
 source_directory="/tmp/02"
 
-for bag_file in glob.glob(source_directory+"/*.bag"):
-    p = subprocess.Popen(["rostopic","echo","-b", bag_file,"-p","/id_node/output"], stdout=subprocess.PIPE) #> timings.txt])
-    out, err = p.communicate()
-    with open(bag_file+"_timings.txt", 'wb') as timings:
-        timings.write(out)
+#for source_topic in ["/id_node/output","/so_rr_node/output_multi"]:
+for source_topic in ["/so_rr_node/output_multi"]:
+    for bag_file in glob.glob(source_directory+"/*.bag"):
+        p = subprocess.Popen(["rostopic","echo","-b", bag_file,"-p",source_topic], stdout=subprocess.PIPE) #> timings.txt])
+        out, err = p.communicate()
+        with open(bag_file+"_timings.txt", 'wb') as timings:
+            timings.write(out)
 
 base_directory = '/catkin_ws/tmp/02/'
 new_directory_name = 'test_%s'%action

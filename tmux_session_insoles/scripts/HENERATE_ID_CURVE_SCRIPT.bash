@@ -9,6 +9,8 @@ SESSION_NAME=insole_${SUBJECT_NUM}
 source "`rospack find tmux_session_core`/common_functions.bash"
 ros_core_tmux_clock "$SESSION_NAME"
 
+#one for real-time, higher numbers to make it slow
+CLOCK_SLOWDOWN_RATE=10
 tmux set -g pane-border-status top
 
 INSOLE_DATA_FILE=$1
@@ -56,7 +58,7 @@ W1=(
 "roslaunch moticon_insoles play_ik_2392.launch model_file:=$MODEL_FILE filename:=$IK_DATA_FILE start_at_secs:=$IK_START_SECS start_at_nsecs:=$IK_START_NSECS --wait" 
 "roslaunch republisher republisher_time_corrected_insoles.launch wrench_delay:=$WRENCH_DELAY debug_publish_zero_cop:=false debug_publish_fixed_force:=false right_sync_time_secs:=${INSOLE_DIFF_RIGHT_SECS} right_sync_time_nsecs:=${INSOLE_DIFF_RIGHT_NSECS} right_insole_t0:=${INSOLE_DIFF_RIGHT_T0} left_sync_time_secs:=${INSOLE_DIFF_LEFT_SECS} left_sync_time_nsecs:=${INSOLE_DIFF_LEFT_NSECS} left_insole_t0:=${INSOLE_DIFF_LEFT_T0} --wait" 
 "roslaunch osrt_ros so_round_robin_filtered_multi.launch n_proc:=4 model_file:=$MODEL_FILE moment_arm_library_path:=$MOMENT_ARM_LIB"
-"roslaunch custom_clock simpler_clock.launch start_at_secs:=$CLOCK_START_SECS start_at_nsecs:=$CLOCK_START_NSECS clock_step_microsseconds:=1000 slowdown_rate:=1" 
+"roslaunch custom_clock simpler_clock.launch start_at_secs:=$CLOCK_START_SECS start_at_nsecs:=$CLOCK_START_NSECS clock_step_microsseconds:=1000 slowdown_rate:=$CLOCK_SLOWDOWN_RATE" 
 "rostopic echo /right/insole"
 "rostopic echo /left/insole"
 #"roswtf" 

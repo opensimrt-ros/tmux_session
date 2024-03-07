@@ -7,46 +7,71 @@ import glob
 import time
 import shutil
 
-#USE_TIMEOUT=True
-USE_TIMEOUT=False
+USE_TIMEOUT=True
+#USE_TIMEOUT=False
 
 timeout_time = 60
 #timeout_time = 80
 
 sample_notebook="standard_analysis.ipynb"
 
+rviz_file="/catkin_ws/src/insoles/moticon_insoles/human_2_wrenches_ramp.rviz"
 
-common_path ='/catkin_ws/Data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2' 
-fff = [
- "2023-03-03-12-01-00squat8_ik_lower.sto",
- "2023-03-03-12-03-09squat029_ik_lower.sto",
-]
+common_path = "/catkin_ws/Data/06_r_with_ramp/ViconData/Ruoli/Motion_Insole/RealTimeIkIDS2_ramp"
+fff = ['2023-03-28-09-44-48ramp2stair011_ik_lower.sto',
+ '2023-03-28-09-49-43ramp2stair022_ik_lower.sto',
+ '2023-03-28-09-51-44ramp2stair033_ik_lower.sto',
+ '2023-03-28-09-52-11ramp2stair044_ik_lower.sto',
+ '2023-03-28-09-54-22ramp2stair055_ik_lower.sto',
+ '2023-03-28-09-54-50ramp2stair066_ik_lower.sto',
+ '~tmpB5_2023-03-28-09-49-43ramp2stair022_ik_lower.sto']
 parameter_tuples = [
-    ('%s/squat_header_corrected.txt'%common_path, '%s/%s'%(common_path,fff[0]),"02"),
-    ('%s/squat02_header_corrected.txt'%common_path, '%s/%s'%(common_path,fff[1]),"02"),
-    #('value1b', 'value2b'),
-]
+        ('%s/ramp2stair01_header_corrected.txt'%common_path,'%s/%s'%(common_path,fff[0]),'02'),
+        ('%s/ramp2stair02_header_corrected.txt'%common_path,'%s/%s'%(common_path,fff[1]),'02'),
+        ('%s/ramp2stair03_header_corrected.txt'%common_path,'%s/%s'%(common_path,fff[2]),'02'),
+        ('%s/ramp2stair04_header_corrected.txt'%common_path,'%s/%s'%(common_path,fff[3]),'02'),
+        ('%s/ramp2stair05_header_corrected.txt'%common_path,'%s/%s'%(common_path,fff[4]),'02'),
+        ('%s/ramp2stair06_header_corrected.txt'%common_path,'%s/%s'%(common_path,fff[5]),'02')]
+insole_start = [1679996688.133011,
+	 1679996982.100011,
+	 1679997103.1020112,
+	 1679997129.604011,
+	 1679997259.0200112,
+	 1679997286.9770112]
+ik_start = [(1679996688, 133011102),
+	 (1679996983, 889728069),
+	 (1679997104, 734781026),
+	 (1679997131, 262083053),
+	 (1679997262, 415745019),
+	 (1679997290, 351881027)]
+clock_start = [(1679996683, 0),
+	 (1679996978, 0),
+	 (1679997099, 0),
+	 (1679997125, 0),
+	 (1679997255, 0),
+	 (1679997282, 0)]
 
-insole_start = [1677844860.441777,
-                1677844989.716777]
-ik_start = [(1677844860, 441776990),
-            (1677844989, 590431928)]
-clock_start = [(1677844859, 0),
-                (1677844988, 0)]
+##these need to be updated to a valid time in this trial. 
+
+insole_diff = {
+        "RSECS":1679996688,
+        "RNSECS":133011000,
+        "RT0":6087633,
+        "LSECS":1679996688,
+        "LNSECS":133011000,
+        "LT0":6068276,
+        }
+action='ramp2stair_with_angles'
 
 
-
-action="squat"
-
-
-id_launcher="id_async_filtered.launch"
+id_launcher="id_asyn_ramp.launch"
 #id_launcher="id_async_filtered_calcn_references.launch"
 
 def cleanup_subprocesses():
     subprocess.run(["tmux", "kill-session"])
     time.sleep(3)
 # Path to your bash script
-bash_script_path = 'GENERATE_ID_CURVE_SCRIPT.bash'
+bash_script_path = 'GENERATE_ID_CURVE_SCRIPT2.bash'
 
 
 
@@ -59,19 +84,26 @@ for i, (insole_file, ik_file, subjectnum) in enumerate(parameter_tuples):
             str(ik_start[i][1]), 
             str(clock_start[i][0]), 
             str(clock_start[i][1]),
-            str(timeout_time)
+            str(timeout_time),
+            str(insole_diff["RSECS"]),
+            str(insole_diff["RNSECS"]),
+            str(insole_diff["RT0"]),
+            str(insole_diff["LSECS"]),
+            str(insole_diff["LNSECS"]),
+            str(insole_diff["LT0"]),
+            rviz_file
             ]
 
     try:
         # Use timeout_decorator.timeout to enforce timeout
-        @timeout_decorator.timeout(timeout_time)  # N seconds timeout
+        @timeout_decorator.timeout(timeout_time+5)  # N seconds timeout
         def run_subprocess():
             subprocess.run(command, check=True)
 
         if USE_TIMEOUT:
             run_subprocess()
         else:
-            if i in [1]: ## put the trials you want to check manually here and set USE_TIMEOUT to False
+            if i in [0]: ## put the trials you want to check manually here and set USE_TIMEOUT to False
                 subprocess.run(command, check=True)
         #print("Bash script executed successfully!")
     except subprocess.CalledProcessError as e:
