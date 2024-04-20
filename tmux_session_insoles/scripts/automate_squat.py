@@ -16,7 +16,7 @@ timeout_time = 60
 sample_notebook="standard_analysis.ipynb"
 
 
-common_path ='/catkin_ws/Data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2' 
+common_path ='/srv/host_data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2' 
 fff = [
  "2023-03-03-12-01-00squat8_ik_lower.sto",
  "2023-03-03-12-03-09squat029_ik_lower.sto",

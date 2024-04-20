@@ -9,8 +9,8 @@ tmux set -g pane-border-status top
 
 W1=(
 "roslaunch osrt_ros id_filtered.launch get_second_label:=false left_foot_tf_name:=left_filtered right_foot_tf_name:=right_filtered --wait" 
-"roslaunch moticon_insoles feet_wrench_and_ik_from_file.launch filename:=/catkin_ws/Data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2/walking01_header_corrected.txt publish_transforms:=false output_left:=/grf_left/unfiltered output_right:=/grf_right/unfiltered --wait" 
-"roslaunch moticon_insoles play_ik.launch filename:=/catkin_ws/Data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2/2023-03-03-11-56-24walking012_ik_lower.sto --wait" 
+"roslaunch moticon_insoles feet_wrench_and_ik_from_file.launch filename:=/srv/host_data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2/walking01_header_corrected.txt publish_transforms:=false output_left:=/grf_left/unfiltered output_right:=/grf_right/unfiltered --wait" 
+"roslaunch moticon_insoles play_ik.launch filename:=/srv/host_data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2/2023-03-03-11-56-24walking012_ik_lower.sto --wait" 
 "roslaunch republisher republisher_insoles.launch --wait" 
 )
 W2=(

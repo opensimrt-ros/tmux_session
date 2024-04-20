@@ -11,8 +11,8 @@ tmux set -g pane-border-status top
 ## looking at the transforms for the wrench in rviz will also be wrong because we publish transformations that are backstamped, so they will show it in a past robot that doesnt exist anymore.
 W1=(
 "roslaunch osrt_ros id_async_filtered.launch get_second_label:=false left_foot_tf_name:=left_filtered right_foot_tf_name:=right_filtered model_file:=/srv/data/gait1992/model/model_generic.osim --wait" 
-"roslaunch moticon_insoles feet_wrench_and_ik_from_file.launch filename:=/catkin_ws/Data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2/walking01_header_corrected.txt publish_transforms:=false output_left:=/grf_left/unfiltered output_right:=/grf_right/unfiltered estimated_delay:=0.0 --wait" 
-"roslaunch moticon_insoles play_ik.launch filename:=/catkin_ws/Data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2/2023-03-03-11-56-24walking012_ik_lower.sto --wait" 
+"roslaunch moticon_insoles feet_wrench_and_ik_from_file.launch filename:=/srv/host_data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2/walking01_header_corrected.txt publish_transforms:=false output_left:=/grf_left/unfiltered output_right:=/grf_right/unfiltered estimated_delay:=0.0 --wait" 
+"roslaunch moticon_insoles play_ik.launch filename:=/srv/host_data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2/2023-03-03-11-56-24walking012_ik_lower.sto --wait" 
 "roslaunch republisher republisher_sync_insoles.launch wrench_delay:=0.15 debug_publish_zero_cop:=false debug_publish_fixed_force:=false --wait" 
 )
 W2=(

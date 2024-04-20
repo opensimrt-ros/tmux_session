@@ -16,7 +16,7 @@ timeout_time = 60
 sample_notebook="standard_analysis.ipynb"
 
 
-common_path = "/catkin_ws/Data/06_r_with_ramp/ViconData/Ruoli/Motion_Insole/RealTimeIkIDS2_ramp"
+common_path = "/srv/host_data/06_r_with_ramp/ViconData/Ruoli/Motion_Insole/RealTimeIkIDS2_ramp"
 fff = ['2023-03-28-09-44-48ramp2stair011_ik_lower.sto',
  '2023-03-28-09-49-43ramp2stair022_ik_lower.sto',
  '2023-03-28-09-51-44ramp2stair033_ik_lower.sto',
