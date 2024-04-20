@@ -39,8 +39,8 @@ tmux send -t mysession:1.0 "rosrun osrt_ros graph_tau_id.bash" C-m
 tmux send -t mysession:1.1 "rosrun osrt_ros graph_grfs.bash" C-m
 
 tmux send -t mysession:1.2 "roslaunch osrt_ros id_combined_filtered.launch get_second_label:=false left_foot_tf_name:=left right_foot_tf_name:=right" C-m
-tmux send -t mysession:1.3 "roslaunch moticon_insoles feet_wrench_and_ik_from_file.launch filename:=/catkin_ws/Data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2/walking01_header_corrected.txt" C-m
-tmux send -t mysession:1.4 "roslaunch moticon_insoles play_ik.launch filename:=/catkin_ws/Data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2/2023-03-03-11-56-24walking012_ik_lower.sto" C-m
+tmux send -t mysession:1.3 "roslaunch moticon_insoles feet_wrench_and_ik_from_file.launch filename:=/srv/host_data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2/walking01_header_corrected.txt" C-m
+tmux send -t mysession:1.4 "roslaunch moticon_insoles play_ik.launch filename:=/srv/host_data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2/2023-03-03-11-56-24walking012_ik_lower.sto" C-m
 #tmux send -t mysession:1.5 "rosrun moticon_insoles service_mux.py" C-m
 tmux send -t mysession:4.0 "roslaunch custom_clock custom_clock.launch slowdown_rate:=3" C-m
 tmux send -t mysession:1.5 "rostopic echo /clock" C-m

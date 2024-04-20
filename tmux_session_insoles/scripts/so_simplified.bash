@@ -14,11 +14,11 @@ NSECS=0
 ## looking at the transforms for the wrench in rviz will also be wrong because we publish transformations that are backstamped, so they will show it in a past robot that doesnt exist anymore.
 W1=(
 "roslaunch osrt_ros id_async_filtered.launch get_second_label:=false left_foot_tf_name:=left_cop_filtered right_foot_tf_name:=right_cop_filtered model_file:=/srv/data/gait1992/model/model_generic.osim --wait" 
-"roslaunch moticon_insoles feet_wrench_and_ik_from_file.launch filename:=/catkin_ws/Data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2/walking01_header_corrected.txt publish_transforms:=false output_left:=/grf_left/unfiltered output_right:=/grf_right/unfiltered estimated_delay:=0.0 foot_length:=0.3 foot_width:=0.1 start_time:=${START_TIME}.$NSECS use_synchronization_event:=true rsecs:=${START_TIME} rnsecs:=$NSECS rto:=8659037 lsecs:=${START_TIME}  lnsecs:=$NSECS lto:=8665572 --wait" 
+"roslaunch moticon_insoles feet_wrench_and_ik_from_file.launch filename:=/srv/host_data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2/walking01_header_corrected.txt publish_transforms:=false output_left:=/grf_left/unfiltered output_right:=/grf_right/unfiltered estimated_delay:=0.0 foot_length:=0.3 foot_width:=0.1 start_time:=${START_TIME}.$NSECS use_synchronization_event:=true rsecs:=${START_TIME} rnsecs:=$NSECS rto:=8659037 lsecs:=${START_TIME}  lnsecs:=$NSECS lto:=8665572 --wait" 
 
 
 
-"roslaunch moticon_insoles play_ik_2392.launch filename:=/catkin_ws/Data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2/2023-03-03-11-56-24walking012_ik_lower.sto model_file:=/srv/data/gait1992/model/model_generic.osim start_at_secs:=${START_TIME} start_at_nsecs:=$NSECS --wait" 
+"roslaunch moticon_insoles play_ik_2392.launch filename:=/srv/host_data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2/2023-03-03-11-56-24walking012_ik_lower.sto model_file:=/srv/data/gait1992/model/model_generic.osim start_at_secs:=${START_TIME} start_at_nsecs:=$NSECS --wait" 
 "roslaunch republisher republisher_insoles.launch wrench_delay:=0.1 debug_publish_zero_cop:=false debug_publish_fixed_force:=false --wait" 
 "roslaunch osrt_ros so_round_robin_filtered_multi.launch n_proc:=4"
 #"rostopic echo /id_node/output_multi"

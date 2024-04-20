@@ -6,7 +6,7 @@ import glob
 import time
 # Define a list of parameter tuples
 # INSOLE FILE, IK FILE
-common_path ='/catkin_ws/Data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2' 
+common_path ='/srv/host_data/ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2' 
 #ik_list = glob.glob("%s/*balance*_ik_lower.sto"%common_path)
 #ik_list.sort()
 #insole_list = glob.glob("%s/balance*_header_corrected.txt"%common_path)
