@@ -7,8 +7,8 @@ import glob
 import time
 import shutil
 
-USE_TIMEOUT=True
-#USE_TIMEOUT=False
+#USE_TIMEOUT=True
+USE_TIMEOUT=False
 
 timeout_time = 40
 #timeout_time = 80
