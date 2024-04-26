@@ -50,11 +50,11 @@ W2=(
 "rosservice call /id_node/set_name_and_path \"{name: 's${SUBJECT_NUM}_id_${ACTION}_filtered_SCRIPT${ACTION_NUM}_', path: '/tmp/${SUBJECT_NUM}' }\" --wait" 
 "rosservice call /so_visualization/set_name_and_path \"{name: 's${SUBJECT_NUM}_id_${ACTION}_filtered_SCRIPT${ACTION_NUM}_', path: '/tmp/${SUBJECT_NUM}' }\" --wait" 
 "rosservice call /id_node/start_recording --wait" 
-"rosservice call /ik/outlabels --wait" 
+"rosservice call /ik/out_labels --wait" 
 "rosservice call /moticon_insoles/start_playback --wait" 
 #this doesnt work because we havent set the end times properly in the nodes, so it will keep on publishing for a very long time
 #"rosservice call /inverse_kinematics_from_file/start_at --wait; sleep 2; rosservice call /id_node/stop_recording ; rosservice call /id_node/write_sto" 
-"rosservice call /inverse_kinematics_from_file/start_at --wait" 
+"rosservice call /ik/inverse_kinematics_from_file/start_at --wait" 
 "rqt_graph " 
 "rosservice call /so_visualization/start_recording --wait" 
 )
