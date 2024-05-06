@@ -6,14 +6,18 @@ import timeout_decorator
 import glob
 import time
 import shutil
+import rospkg
+rospack = rospkg.RosPack()
 
-USE_TIMEOUT=True
-#USE_TIMEOUT=False
+tsi_pkg_path = rospack.get_path("tmux_session_insoles")
+
+#USE_TIMEOUT=True
+USE_TIMEOUT=False
 
 timeout_time = 30
 #timeout_time = 80
 
-sample_notebook="standard_analysis.ipynb"
+sample_notebook=os.path.join(tsi_pkg_path, "scripts", "standard_analysis.ipynb")
 # Define a list of parameter tuples
 # INSOLE FILE, IK FILE
 #model_file="/srv/host_data/02_ruoli/gait2392_simbody_RW.osim"

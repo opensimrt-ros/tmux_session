@@ -104,6 +104,7 @@ W3=(
 )
 W4=(
 "roslaunch osrt_ros vis_so_rr_multi.launch model_file:=$MODEL_FILE "
+"roslaunch osrt_ros vis_id.launch model_file:=$MODEL_FILE "
 "#rosrun tmux_session_insoles g_ik.bash"
 "#rosrun tmux_session_insoles g_grf.bash"
 "#rosrun tmux_session_insoles g_cop.bash"
