@@ -14,6 +14,11 @@ tsi_pkg_path = rospack.get_path("tmux_session_insoles")
 #USE_TIMEOUT=True
 USE_TIMEOUT=False
 
+trials_to_run = [8]
+clock_slowdown_rate= 1
+
+#clock_slowdown_rate= 1
+
 timeout_time = 30
 #timeout_time = 80
 
@@ -60,17 +65,24 @@ parameter_tuples = [
 ## the ik will always start at like epoch+3
 
 # insole_start  is the time difference between them as sec, .secs (it's going to be appended)
-insole_start = [(0, 7),
-            (0, 7),
-            (0, 55),
-            (0, 0),
-            (0, 6),
-            (0, 25),
-            (0, 0),
-            (0, 3),
-            (0, 0)]
 
-ik_delay=2.0
+#it's like each line is a trial
+#
+# then the first element of the tuple is the common ik delay and the second and third are
+#insole left , insole right
+#
+
+insole_start = [([0, 0  ],[0, 0  ],[0, 0  ]),
+                ([0, 0  ],[0, 0  ],[0, 0  ]),
+                ([0, 0  ],[0, 0  ],[0, 0  ]),
+                ([0, 0  ],[0, 0  ],[0, 0  ]),
+                ([0, 0  ],[0, 0  ],[0, 0  ]),
+                ([0, 0  ],[0, 0  ],[0, 0  ]),
+                ([0, 0  ],[0, 0  ],[0, 0  ]),
+                ([0, 0  ],[0, 0  ],[0, 0  ]),
+                ([0, 0  ],[0, 0  ],[0, 0  ])]
+
+ik_delay=3.0
 
 action="walking"
 
@@ -89,25 +101,28 @@ angle=-60.87
 for i, (insole_file, ik_file, subjectnum) in enumerate(parameter_tuples):
     print(i, insole_file, ik_file)
     command = ['/opt/ros/noetic/bin/rosrun', 'tmux_session_insoles', bash_script_path, insole_file, ik_file, str(i), subjectnum, action, id_launcher, 
-            str(insole_start[i][0]), 
-            str(insole_start[i][1]), 
+            str(insole_start[i][0][0]), 
+            str(insole_start[i][0][1]), 
             str(timeout_time),
             str(angle),
             str(ik_delay),
             model_file,
-            moment_arm_lib
+            moment_arm_lib,
+            str(insole_start[i][1]),
+            str(insole_start[i][2]),
+            str(clock_slowdown_rate),
             ]
 
     try:
         # Use timeout_decorator.timeout to enforce timeout
-        @timeout_decorator.timeout(timeout_time)  # N seconds timeout
+        @timeout_decorator.timeout((timeout_time+ik_delay)*clock_slowdown_rate)  # N seconds timeout, but if there is a clock slowdown, then it will need proportionally a larger amount of time
         def run_subprocess():
             subprocess.run(command, check=True)
 
         if USE_TIMEOUT:
             run_subprocess()
         else:
-            if i in [0]: ## put the trials you want to check manually here and set USE_TIMEOUT to False
+            if i in trials_to_run: ## put the trials you want to check manually here and set USE_TIMEOUT to False
                 subprocess.run(command, check=True)
         #print("Bash script executed successfully!")
     except subprocess.CalledProcessError as e:
