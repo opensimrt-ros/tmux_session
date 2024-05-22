@@ -4,7 +4,7 @@
 USE_TIMEOUT=False
 
 #trials_to_run = [1,2,3,4,5,6,7,8]
-trials_to_run = [1]
+trials_to_run = [0]
 
 #clock_slowdown_rate= 1
 clock_slowdown_rate=1
@@ -89,7 +89,7 @@ parameter_tuples = [
 ##this is from trying with point_x
 
 insole_start = [
- [None, None , None  ],
+ [1.0, 0 , 0  ],
  [1.0, 0.6  , 0.35 ],
  [1.0, 0.6  , 0.65  ],
  [1.0, 0.1  , -0.1  ],
