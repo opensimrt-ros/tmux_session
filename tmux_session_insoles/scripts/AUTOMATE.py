@@ -248,28 +248,31 @@ while True:
     counter += 1
 
 packages_to_check = [
-        ""
+        "tmux_session_insoles",
+        "osrt_ros",
+        "opensimrt"
         ]
 
 def create_packages_rev_parse_strings(package_list):
-    revparse_dic
+    revparse_dic = {}
     for package in package_list:
         this_package_path = rospack.get_path(package)
-        subprocess.run("git rev-parse HEAD") # i need to change dirs or something
-
+        print(this_package_path)
+        this_git_rev = subprocess.check_output(["/usr/bin/git","rev-parse","HEAD"],cwd=this_package_path).decode("ascii").strip() # i need to change dirs or something
+        revparse_dic.update({package:(this_package_path,this_git_rev)})
     return revparse_dic
 
 bling(directory_path)
 
 ## stores also the git rev-parse of every package:
 
-if False:
+if True:
     ## TODO: not implemented yet
     revparse_dic = create_packages_rev_parse_strings(packages_to_check)
 
     git_state_yaml = os.path.join(directory_path, "git_packages_state.yaml") 
     with open(git_state_yaml, 'w') as outfile:
-        yaml.dump(revparse_dict, outfile, default_flow_style=False, sort_keys=False)
+        yaml.dump(revparse_dic, outfile, default_flow_style=False, sort_keys=False)
 
 
 
