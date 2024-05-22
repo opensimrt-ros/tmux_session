@@ -1,10 +1,10 @@
 #!/bin/env python3
 
-USE_TIMEOUT=True
-#USE_TIMEOUT=False
+#USE_TIMEOUT=True
+USE_TIMEOUT=False
 
 #trials_to_run = [0,1,2,3,4,5,6,7,8]
-trials_to_run = [5]
+trials_to_run = [6]
 
 #clock_slowdown_rate= 1
 clock_slowdown_rate=1
@@ -95,7 +95,7 @@ insole_start = [
  [1.3, 0.7  , 0.25  ], #
  [1.0, 0.5  , 0.4   ], #
  [0.9, 0.0  , 0.7  ], #
- [0.5, 0.0 , 0.8  ], #
+ [0.5, 0.0 , 0.8  ],
  [1.0, 0.0  , 0.0   ],
  [1.0, 0.9 , 0.6  ],   #
  ]
