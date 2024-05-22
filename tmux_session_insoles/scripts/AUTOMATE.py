@@ -97,7 +97,7 @@ insole_start = [
  [1.0, 0.1  , 0.45  ],
  [1.0, -0.5 , 0.3   ],
  [1.0, 0.0  , 0.0   ],
- [1.0, 0.25 , 0.45  ],
+ [1.0, 0.5 , 0.45  ],
  ]
 
 ## this is will be subtracted to insole delay to make it possible to make insoles go faster than ik. value in seconds
