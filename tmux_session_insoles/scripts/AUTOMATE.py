@@ -247,7 +247,30 @@ while True:
     
     counter += 1
 
+packages_to_check = [
+        ""
+        ]
+
+def create_packages_rev_parse_strings(package_list):
+    revparse_dic
+    for package in package_list:
+        this_package_path = rospack.get_path(package)
+        subprocess.run("git rev-parse HEAD") # i need to change dirs or something
+
+    return revparse_dic
+
 bling(directory_path)
+
+## stores also the git rev-parse of every package:
+
+if False:
+    ## TODO: not implemented yet
+    revparse_dic = create_packages_rev_parse_strings(packages_to_check)
+
+    git_state_yaml = os.path.join(directory_path, "git_packages_state.yaml") 
+    with open(git_state_yaml, 'w') as outfile:
+        yaml.dump(revparse_dict, outfile, default_flow_style=False, sort_keys=False)
+
 
 
 # Loop through the parameter tuples and run the subprocess
@@ -297,6 +320,7 @@ for i, (insole_file, ik_file, subjectnum) in enumerate(parameter_tuples):
             'right':as_list(insole_start[i][2]),
             }
 
+    ##TODO: only save if we run it
     commands_yaml = os.path.join(directory_path, "tmux_execute%d.yaml"%i) 
     with open(os.path.join(tsi_pkg_path, "config","GEN.yaml.template"), "rt") as fin:
             
