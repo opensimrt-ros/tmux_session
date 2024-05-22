@@ -4,7 +4,7 @@
 USE_TIMEOUT=False
 
 #trials_to_run = [1,2,3,4,5,6,7,8]
-trials_to_run = [0]
+trials_to_run = [1]
 
 #clock_slowdown_rate= 1
 clock_slowdown_rate=1
