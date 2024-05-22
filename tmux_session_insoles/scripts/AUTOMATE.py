@@ -89,7 +89,7 @@ parameter_tuples = [
 ##this is from trying with point_x
 
 insole_start = [
- [1.0, 0 , 0  ],
+ [1.0, 0.6 , 0.8  ],
  [1.0, 0.6  , 0.35 ],
  [1.0, 0.6  , 0.65  ],
  [1.0, 0.1  , -0.1  ],
