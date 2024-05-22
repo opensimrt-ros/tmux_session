@@ -86,27 +86,6 @@ parameter_tuples = [
 #insole left , insole right
 #
 
-insole_start_original = [(0.4 , 0.0  ,0.0),
-                (0.1 , 0.4  ,0.0),
-                (0.3 , 0.15 ,0.0),
-                (0.2 , 0.65  ,0.0),
-                (0.4 , 0.05  ,0.0),
-                (0.0 , 0.0  ,0.7),
-                (0.0  ,0.02 ,0.0),
-                (0.0  ,0.0  ,0.0),
-                (0.6  ,0.25 ,0.0)]
-
-insole_start_lags_from_point_x = [
- [1.3884530000000002, 0.007698, 0.0],
- [1.096151, 0.4, 0.05389],
- [1.311547, 0.150001, 0.0],
- [1.173054, 0.803977, 0.0],
- [1.4038490000000001, 0.05, 0.0],
- [0.91916, 0.0, 0.761593],
- [0.973055, 0.058493, 0.0],
- [1.0, 0.0, 0.0],
- [1.611548, 0.257699, 0.0]]
-
 ##this is from trying with point_x
 
 insole_start = [
@@ -121,20 +100,7 @@ insole_start = [
  [1.0, 0.25 , 0.45  ],
  ]
 
-humm= [
- [1.0, 0.65, 0.65],
- [1.0, -0.15, 0.6],
- [1.0, 0.65, 0.6],
- [1.0, -0.1, 0.1],
- [1.0, 0.6, 0.6],
- [1.0, 0.45, 0.1],
- [1.0, 0.3, -0.5],
- [1.0, 0.0, 0.0],
- [1.0, 0.45, 0.25],
-
-        ]
-
-## this is a negative number in seconds
+## this is will be subtracted to insole delay to make it possible to make insoles go faster than ik. value in seconds
 insole_starts_sooner = 1
 
 ik_start_delay = 6
@@ -251,6 +217,12 @@ def my_run2(command_dic, which_trial):
     p.start()
     #set params manually because we don't know how to do it otherwise
     rospy.set_param("/moticon_insoles/diff_time",diff_time_dict)
+    
+
+    timediff_yaml = os.path.join(directory_path, "time_diff%s.yaml"%replace_strings_dict["$ACTION_NUM"]) 
+    with open(timediff_yaml, 'w') as outfile:
+        yaml.dump(diff_time_dict, outfile, default_flow_style=False, sort_keys=False)
+
     tm.create_some_windows(window_dic=command_dic,some_manager=this_m)
     #time.sleep(1)
     this_m.attach()
@@ -285,7 +257,7 @@ for i, (insole_file, ik_file, subjectnum) in enumerate(parameter_tuples):
     which_trial = (i, insole_file, ik_file)
     epoch_time = int(time.time())
     ik_start_secs = epoch_time + ik_start_delay
-    this_insole_start = ik_start_secs+insole_start[i][0] - 1
+    this_insole_start = ik_start_secs+insole_start[i][0] - insole_starts_sooner
     real_timeout_time = (timeout_time+ik_start_delay+id_ik_delay)*clock_slowdown_rate + trial_ctr_c_time
     #We create a dictionary :
     replace_strings_dict = {

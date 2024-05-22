@@ -1,0 +1,87 @@
+ik_nodes:
+  - roslaunch moticon_insoles insole_tfs.launch tf_prefix:=ik/
+  - roslaunch osrt_ros t41.launch sto_file:=$STO_DATA_FILE start_at_secs:=$IK_START_SECS start_at_nsecs:=$IK_START_NSECS
+  - roslaunch osrt_ros t42.launch run_as_service:=true parent_frame:=map
+  - roslaunch osrt_ros t43.launch vis:=false
+	#### These to show the skeleton
+	#- roslaunch osrt_ros t44.launch base_parent:=opensim_default_frame
+  - roslaunch osrt_ros t44.launch
+  - roslaunch osrt_ros t45.launch show_rviz:=false urdf_model_scale:=${URDF_MODEL_SCALE}
+  - sleep 0.5 ;roslaunch osrt_ros t46.launch bypass_heading_computation:=true heading_debug:=0 heading_offset:=$ANGLE visualise:=false wait_to_start:=false model_file:=$MODEL_FILE
+
+ik_nodes_goal:
+  - roslaunch moticon_insoles insole_tfs.launch tf_prefix:=ik/ 
+  - roslaunch osrt_ros t41.launch sto_file:=/srv/host_data/04_ew/ViconData/Ruoli/Motion_Insole/RealTimeIkIDS4/2023-03-10-10-16-43walking033_imus_lower.sto start_at_secs:=1715778302 start_at_nsecs:=0 
+  - roslaunch osrt_ros t42.launch run_as_service:=true parent_frame:=map 
+  - roslaunch osrt_ros t43.launch vis:=false 
+  - roslaunch osrt_ros t44.launch 
+  - roslaunch osrt_ros t45.launch show_rviz:=false urdf_model_scale:=0.9714285714285714 sleep 0.5 ;
+  - roslaunch osrt_ros t46.launch bypass_heading_computation:=true heading_debug:=0 heading_offset:=-60.87 visualise:=false wait_to_start:=false model_file:=/srv/host_data/04_ew/S4_scaled.osim
+
+main_nodes:
+	#- roslaunch osrt_ros ${ID_NODE_LAUNCH} get_second_label:=false left_foot_tf_name:=left_cop_filtered right_foot_tf_name:=right_cop_filtered model_file:=$MODEL_FILE ik_delay:=${IK_DELAY} max_buffer_length:=1000 --wait
+  - roslaunch osrt_ros ${ID_NODE_LAUNCH} get_second_label:=false left_foot_tf_name:=left_cop_filtered right_foot_tf_name:=right_cop_filtered model_file:=$MODEL_FILE ik_delay:=${IK_DELAY} max_buffer_length:=1000 grf_no_rotation:=$GRF_NO_ROTATION --wait
+  - roslaunch moticon_insoles feet_wrench_and_ik_from_file.launch filename:=$INSOLE_DATA_FILE publish_transforms:=false output_left:=/grf_left/unfiltered output_right:=/grf_right/unfiltered estimated_delay:=0.0 foot_length:=0.2486 foot_width:=0.0902 grf_origin_z_offset:=$GRF_ORIGIN_Z_OFFSET start_time:=$INSOLE_START_TIME diff_time:=\"{'left':${INSOLE_START_DLEFT},'right':${INSOLE_START_DRIGHT}}\" use_synchronization_event:=true --wait
+	#- roslaunch moticon_insoles play_ik_2392.launch model_file:=$MODEL_FILE filename:=$IK_DATA_FILE start_at_secs:=$IK_START_SECS start_at_nsecs:=$IK_START_NSECS --wait
+  - roslaunch republisher republisher_insoles.launch wrench_delay:=$WRENCH_DELAY --wait
+	#- roslaunch republisher republisher_insoles.launch wrench_delay:=$WRENCH_DELAY ns:=/no_delay/ --wait
+  - roslaunch osrt_ros so_round_robin_filtered_multi.launch n_proc:=$NUM_PROC_SO model_file:=$MODEL_FILE moment_arm_library_path:=$MOMENT_ARM_LIB
+  - if [ ${CLOCK_SLOWDOWN_RATE} -ne 1 ]; then roslaunch custom_clock simpler_clock.launch start_at_secs:=$CLOCK_START_SECS start_at_nsecs:=$CLOCK_START_NSECS clock_step_microsseconds:=1000 slowdown_rate:=${CLOCK_SLOWDOWN_RATE}; fi 
+	#- roswtf
+
+main_nodes_goal:
+  - roslaunch osrt_ros id_async_filtered.launch get_second_label:=false left_foot_tf_name:=left_cop_filtered right_foot_tf_name:=right_cop_filtered model_file:=/srv/host_data/04_ew/S4_scaled.osim ik_delay:=3.0 max_buffer_length:=1000 grf_no_rotation:=true --wait 
+  - roslaunch moticon_insoles feet_wrench_and_ik_from_file.launch filename:=/srv/host_data/04_ew/ViconData/Ruoli/Motion_Insole/RealTimeIkIDS4/walking03_header_corrected.txt publish_transforms:=false output_left:=/grf_left/unfiltered output_right:=/grf_right/unfiltered estimated_delay:=0.0 foot_length:=0.2486 foot_width:=0.0902 grf_origin_z_offset:=0.0 start_time:=1715778302.514776 diff_time:="{'left':[0, 0.219248],'right':[0, 0.0]}" use_synchronization_event:=true --wait 
+  - roslaunch republisher republisher_insoles.launch wrench_delay:=0.0 --wait 
+  - roslaunch osrt_ros so_round_robin_filtered_multi.launch n_proc:=4 model_file:=/srv/host_data/04_ew/S4_scaled.osim moment_arm_library_path:=/catkin_ws/devel/lib/Gait2392MomentArm_RW 
+if [ 1 -ne 1 ]; then roslaunch custom_clock simpler_clock.launch start_at_secs:=1715778298 start_at_nsecs:= clock_step_microsseconds:=1000 slowdown_rate:=1; fi
+
+sync:
+  - rosbag record /so_rr_node/output_multi /tf /tf_static -O /tmp/${SUBJECT_NUM}/so_output_${ACTION}_${ACTION_NUM} --duration=${TIMEOUT_BAG_FILE_SAVE_TIME}
+  - rosbag record /id_node/output_multi -O /tmp/${SUBJECT_NUM}/id_output_${ACTION}_${ACTION_NUM} --duration=${TIMEOUT_BAG_FILE_SAVE_TIME}
+  - rosservice call /id_node/set_name_and_path \"{name: 's${SUBJECT_NUM}_id_${ACTION}_filtered_SCRIPT${ACTION_NUM}_', path: '/tmp/${SUBJECT_NUM}' }\" --wait
+  - rosservice call /so_visualization/set_name_and_path \"{name: 's${SUBJECT_NUM}_id_${ACTION}_filtered_SCRIPT${ACTION_NUM}_', path: '/tmp/${SUBJECT_NUM}' }\" --wait
+  - rosservice call /id_node/start_recording --wait
+  - rosservice call /ik/out_labels --wait
+  - rosservice call /moticon_insoles/start_playback --wait
+	#this doesnt work because we havent set the end times properly in the nodes, so it will keep on publishing for a very long time
+	#- rosservice call /inverse_kinematics_from_file/start_at --wait; sleep 2; rosservice call /id_node/stop_recording ; rosservice call /id_node/write_sto
+  - rosservice call /ik/inverse_kinematics_from_file/start_at --wait
+	#- rqt_graph 
+  - rosservice call /so_visualization/start_recording --wait
+
+sync_goal:
+  - rosbag record /so_rr_node/output_multi /tf /tf_static -O /tmp/04/so_output_walking_2 --duration=20 
+  - rosbag record /id_node/output_multi -O /tmp/04/id_output_walking_2 --duration=20 
+  - rosservice call /id_node/set_name_and_path "{name: 's04_id_walking_filtered_SCRIPT2_', path: '/tmp/04' }" --wait 
+  - rosservice call /so_visualization/set_name_and_path "{name: 's04_id_walking_filtered_SCRIPT2_', path: '/tmp/04' }" --wait 
+  - rosservice call /id_node/start_recording --wait 
+  - rosservice call /ik/out_labels --wait 
+  - rosservice call /moticon_insoles/start_playback --wait 
+  - rosservice call /ik/inverse_kinematics_from_file/start_at --wait 
+  - rosservice call /so_visualization/start_recording --wait
+
+vis:
+  - roslaunch osrt_ros vis_so_rr_multi.launch model_file:=$MODEL_FILE 
+  - roslaunch osrt_ros vis_id.launch model_file:=$MODEL_FILE 
+  - roslaunch osrt_ros vis_ik.launch model_file:=$MODEL_FILE
+  #- rosrun tmux_session_insoles g_ik.bash
+  #- rosrun tmux_session_insoles g_grf.bash
+  #- rosrun tmux_session_insoles g_cop.bash
+  #- rosrun osrt_ros graph_iks_old_filtered.bash
+  - sleep ${TIMEOUT_STO_SAVER_NODES}; rosservice call /id_node/stop_recording ; rosservice call /id_node/write_sto
+  - sleep ${TIMEOUT_STO_SAVER_NODES}; rosservice call /so_visualization/stop_recording ; rosservice call /so_visualization/write_sto
+
+
+vis_goal:
+  - roslaunch osrt_ros vis_so_rr_multi.launch model_file:=/srv/host_data/04_ew/S4_scaled.osim 
+  - roslaunch osrt_ros vis_id.launch model_file:=/srv/host_data/04_ew/S4_scaled.osim 
+  - roslaunch osrt_ros vis_ik.launch model_file:=/srv/host_data/04_ew/S4_scaled.osim 
+  
+  #- rosrun tmux_session_insoles g_ik.bash 
+  #- rosrun tmux_session_insoles g_grf.bash 
+  #- rosrun tmux_session_insoles g_cop.bash 
+  #- rosrun osrt_ros graph_iks_old_filtered.bash 
+  - sleep 18; rosservice call /id_node/stop_recording ; rosservice call /id_node/write_sto 
+  - sleep 18; rosservice call /so_visualization/stop_recording ; rosservice call /so_visualization/write_sto
+
