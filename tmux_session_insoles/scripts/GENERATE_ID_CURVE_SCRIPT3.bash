@@ -2,17 +2,17 @@
 SUBJECT_NUM=$4
 SESSION_NAME=insole_${SUBJECT_NUM}
 
-source "`rospack find tmux_session_core`/common_functions.bash"
+#source "`rospack find tmux_session_core`/common_functions.bash"
 
 CLOCK_SLOWDOWN_RATE=${16}
 
-if [ "$CLOCK_SLOWDOWN_RATE" -ne 1 ]; then
-	ros_core_tmux_clock "$SESSION_NAME";
-else
-	ros_core_tmux "$SESSION_NAME";
-fi
+#if [ "$CLOCK_SLOWDOWN_RATE" -ne 1 ]; then
+#	ros_core_tmux_clock "$SESSION_NAME";
+#else
+#	ros_core_tmux "$SESSION_NAME";
+#fi
 
-tmux set -g pane-border-status top
+#tmux set -g pane-border-status top
 
 INSOLE_DATA_FILE=$1
 STO_DATA_FILE=$2
@@ -28,7 +28,7 @@ GRF_ORIGIN_Z_OFFSET=0.0
 WRENCH_DELAY=0.0
 CLOCK_START_SECS=$EPOCHSECONDS
 IK_START_SECS=$(expr $CLOCK_START_SECS + 4)
-INSOLE_START_SECS=$(expr $7 + $IK_START_SECS)
+INSOLE_START_SECS=$(expr $IK_START_SECS + $7 - 1)
 INSOLE_START_NSECS=$8
 INSOLE_START_TIME=${IK_START_SECS}.${INSOLE_START_NSECS}
 INSOLE_START_DLEFT=${14}
@@ -44,6 +44,8 @@ ANGLE=${10}
 IK_DELAY=${11}
 MODEL_FILE=${12}
 MOMENT_ARM_LIB=${13}
+URDF_MODEL_SCALE=${17}
+GRF_NO_ROTATION=${18}
 ## it seems like we are messing up with the publish_transforms=false, but we are actually republishing the values using the combined message with everything from the insoles, so it is okay
 ## another caveat is that the insoles delay is being completely overlooked by the republisher node which has its own delay for publishing onld COP transforms, so we set it to zero. 
 ## looking at the transforms for the wrench in rviz will also be wrong because we publish transformations that are backstamped, so they will show it in a past robot that doesnt exist anymore.
@@ -58,14 +60,13 @@ W0=(
 	#### These to show the skeleton
 	#"roslaunch osrt_ros t44.launch base_parent:=opensim_default_frame"
 	"roslaunch osrt_ros t44.launch"
-	"roslaunch osrt_ros t45.launch show_rviz:=false"
-	"sleep 0.1 ;roslaunch osrt_ros t46.launch bypass_heading_computation:=true heading_debug:=0 heading_offset:=$ANGLE visualise:=false wait_to_start:=false model_file:=$MODEL_FILE"
-	"roslaunch osrt_ros vis_ik.launch model_file:=$MODEL_FILE"
+	"roslaunch osrt_ros t45.launch show_rviz:=false urdf_model_scale:=${URDF_MODEL_SCALE}"
+	"sleep 0.5 ;roslaunch osrt_ros t46.launch bypass_heading_computation:=true heading_debug:=0 heading_offset:=$ANGLE visualise:=false wait_to_start:=false model_file:=$MODEL_FILE"
 )
 
 W1=(
 	#"roslaunch osrt_ros ${ID_NODE_LAUNCH} get_second_label:=false left_foot_tf_name:=left_cop_filtered right_foot_tf_name:=right_cop_filtered model_file:=$MODEL_FILE ik_delay:=${IK_DELAY} max_buffer_length:=1000 --wait" 
-	"roslaunch osrt_ros ${ID_NODE_LAUNCH} get_second_label:=false left_foot_tf_name:=left_cop_filtered right_foot_tf_name:=right_cop_filtered model_file:=$MODEL_FILE ik_delay:=${IK_DELAY} max_buffer_length:=1000 grf_no_rotation:=false --wait" 
+	"roslaunch osrt_ros ${ID_NODE_LAUNCH} get_second_label:=false left_foot_tf_name:=left_cop_filtered right_foot_tf_name:=right_cop_filtered model_file:=$MODEL_FILE ik_delay:=${IK_DELAY} max_buffer_length:=1000 grf_no_rotation:=$GRF_NO_ROTATION --wait" 
 	"roslaunch moticon_insoles feet_wrench_and_ik_from_file.launch filename:=$INSOLE_DATA_FILE publish_transforms:=false output_left:=/grf_left/unfiltered output_right:=/grf_right/unfiltered estimated_delay:=0.0 foot_length:=0.2486 foot_width:=0.0902 grf_origin_z_offset:=$GRF_ORIGIN_Z_OFFSET start_time:=$INSOLE_START_TIME diff_time:=\"{'left':${INSOLE_START_DLEFT},'right':${INSOLE_START_DRIGHT}}\" use_synchronization_event:=true --wait" 
 	#"roslaunch moticon_insoles play_ik_2392.launch model_file:=$MODEL_FILE filename:=$IK_DATA_FILE start_at_secs:=$IK_START_SECS start_at_nsecs:=$IK_START_NSECS --wait" 
 	"roslaunch republisher republisher_insoles.launch wrench_delay:=$WRENCH_DELAY --wait" 
@@ -76,7 +77,7 @@ W1=(
 )
 W2=(
 	"rosbag record /so_rr_node/output_multi /tf /tf_static -O /tmp/${SUBJECT_NUM}/so_output_${ACTION}_${ACTION_NUM} --duration=${TIMEOUT_BAG_FILE_SAVE_TIME}"
-	"rosbag record /id_node/output -O /tmp/${SUBJECT_NUM}/id_output_${ACTION}_${ACTION_NUM} --duration=${TIMEOUT_BAG_FILE_SAVE_TIME}"
+	"rosbag record /id_node/output_multi -O /tmp/${SUBJECT_NUM}/id_output_${ACTION}_${ACTION_NUM} --duration=${TIMEOUT_BAG_FILE_SAVE_TIME}"
 	"rosservice call /id_node/set_name_and_path \"{name: 's${SUBJECT_NUM}_id_${ACTION}_filtered_SCRIPT${ACTION_NUM}_', path: '/tmp/${SUBJECT_NUM}' }\" --wait" 
 	"rosservice call /so_visualization/set_name_and_path \"{name: 's${SUBJECT_NUM}_id_${ACTION}_filtered_SCRIPT${ACTION_NUM}_', path: '/tmp/${SUBJECT_NUM}' }\" --wait" 
 	"rosservice call /id_node/start_recording --wait" 
@@ -90,11 +91,11 @@ W2=(
 )
 W3=(
 	#"rosrun osrt_ros graph_tau_id_1992.bash" 
-	"rostopic hz /ik/output"
+	#"rostopic hz /ik/output"
 	#"rostopic echo /so_rr_node/output_multi"
 	"rostopic list"
 	#"rostopic echo /ik/output"
-	#"rostopic echo /ik/output_filtered"
+	"rostopic echo /ik/output_filtered"
 	##"rostopic hz /left/insole"
 	#"rostopic echo /left/insole"
 	"rostopic echo /left/wrench_filtered"
@@ -114,6 +115,7 @@ W3=(
 W4=(
 	"roslaunch osrt_ros vis_so_rr_multi.launch model_file:=$MODEL_FILE "
 	"roslaunch osrt_ros vis_id.launch model_file:=$MODEL_FILE "
+	"roslaunch osrt_ros vis_ik.launch model_file:=$MODEL_FILE"
 	"#rosrun tmux_session_insoles g_ik.bash"
 	"#rosrun tmux_session_insoles g_grf.bash"
 	"#rosrun tmux_session_insoles g_cop.bash"
@@ -122,16 +124,29 @@ W4=(
 	"sleep ${TIMEOUT_STO_SAVER_NODES}; rosservice call /so_visualization/stop_recording ; rosservice call /so_visualization/write_sto" 
 )
 
-set > a.txt
+set > /tmp/last_run_commands_from_some_script.txt
+echo "=========================================================\n" >> /tmp/last_run_commands_from_some_script.txt
+echo "=========================================================\n" >> /tmp/last_run_commands_from_some_script.txt
+echo "=========================================================\n" >> /tmp/last_run_commands_from_some_script.txt
+echo ${W0[@]} >> /tmp/last_run_commands_from_some_script.txt
+echo "=========================================================\n" >> /tmp/last_run_commands_from_some_script.txt
+echo ${W1[@]} >> /tmp/last_run_commands_from_some_script.txt
+echo "=========================================================\n" >> /tmp/last_run_commands_from_some_script.txt
+echo ${W2[@]} >> /tmp/last_run_commands_from_some_script.txt
+echo "=========================================================\n" >> /tmp/last_run_commands_from_some_script.txt
+echo ${W4[@]} >> /tmp/last_run_commands_from_some_script.txt
+echo "=========================================================\n" >> /tmp/last_run_commands_from_some_script.txt
 
+#exit 0
 
-create_tmux_window "$SESSION_NAME" "sync" "${W2[@]}"
-create_tmux_window "$SESSION_NAME" "vis2" 	"${W4[@]}"
-create_tmux_window "$SESSION_NAME" "ik_nodes" "${W0[@]}"
-create_tmux_window "$SESSION_NAME" "main_nodes" "${W1[@]}"
-create_tmux_window "$SESSION_NAME" "vis" 	"${W3[@]}"
+#create_tmux_window "$SESSION_NAME" "sync" "${W2[@]}"
+#create_tmux_window "$SESSION_NAME" "vis" 	"${W4[@]}"
+#create_tmux_window "$SESSION_NAME" "ik_nodes" "${W0[@]}"
+#create_tmux_window "$SESSION_NAME" "main_nodes" "${W1[@]}"
 
-tmux -2 a -t $SESSION_NAME
+#create_tmux_window "$SESSION_NAME" "debug" 	"${W3[@]}"
+
+#tmux -2 a -t $SESSION_NAME
 
 
 

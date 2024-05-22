@@ -1,0 +1,46 @@
+"$INSOLE_DATA_FILE":    insole_file,
+"$STO_DATA_FILE":       ik_file,
+"$ACTION_NUM":          str(i),
+"$SUBJECT_NUM":         subjectnum,
+"$ACTION":              action,
+"$ID_NODE_LAUNCH":      id_launcher,
+"$INSOLE_START_NSECS":  strn(insole_start[i][0])[1],
+"$ANGLE":               str(angle),
+"$IK_DELAY":            str(ik_delay),
+"$MODEL_FILE":          model_file,
+"$MOMENT_ARM_LIB":      moment_arm_lib,
+"$INSOLE_START_DLEFT":  str__f(insole_start[i][1]),
+"$INSOLE_START_DRIGHT": str__f(insole_start[i][2]),
+"$CLOCK_SLOWDOWN_RATE": str(clock_slowdown_rate),
+"$URDF_MODEL_SCALE":    str(height/default_urdf_model_height),
+"$GRF_NO_ROTATION":     grf_no_rotation,
+
+"$GRF_ORIGIN_Z_OFFSET": str(0.0),
+"$WRENCH_DELAY":	str(0.0),
+"$IK_START_NSECS":	str(insole_start_nsecs),
+"$NUM_PROC_SO":		str(4),
+
+
+epoch_time = int(time.time())
+ik_start_secs = epoch_time +4
+insole_start_nsecs = 0
+
+"$CLOCK_START_SECS": str(epoch_time),
+"$SESSION_NAME":     "insole_%s"%subjectnum,
+"$IK_START_SECS":    str(ik_start_secs),
+"$INSOLE_START_TIME": "%s.%s"%(ik_start_secs.insole_start_nsecs)
+
+"$"
+
+7 = strn(insole_start[i][0])[0],
+9 = str(timeout_time),
+
+
+
+INSOLE_START_SECS=$(expr $IK_START_SECS + $7 - 1)
+TIMEOUT_TIME=$(expr $9 \* $CLOCK_SLOWDOWN_RATE)
+
+
+TIMEOUT_BAG_FILE_SAVE_TIME=$(expr $TIMEOUT_TIME - 10)
+TIMEOUT_STO_SAVER_NODES=$(expr $TIMEOUT_TIME - 12)
+
