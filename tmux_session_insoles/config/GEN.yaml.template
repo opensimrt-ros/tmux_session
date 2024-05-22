@@ -29,9 +29,9 @@ sync_2:
 
 vis:
   - roslaunch osrt_ros vis_so_rr_multi.launch model_file:=$MODEL_FILE 
-  - roslaunch osrt_ros vis_id.launch model_file:=$MODEL_FILE 
+  - if [ ${SHOW_RVIZ} -ne 1 ]; then roslaunch osrt_ros vis_id.launch model_file:=$MODEL_FILE; fi 
   #- roslaunch osrt_ros vis_id_calcn.launch model_file:=$MODEL_FILE 
-  - roslaunch osrt_ros vis_ik.launch model_file:=$MODEL_FILE
+  - if [ ${SHOW_RVIZ} -ne 1 ]; then roslaunch osrt_ros vis_ik.launch model_file:=$MODEL_FILE; fi
   #- rosrun tmux_session_insoles g_ik.bash
   #- rosrun tmux_session_insoles g_grf.bash
   #- rosrun tmux_session_insoles g_cop.bash
