@@ -4,17 +4,17 @@ USE_TIMEOUT=True
 #USE_TIMEOUT=False
 
 #trials_to_run = [0,1,2,3,4,5,6,7,8]
-trials_to_run = [7]
+trials_to_run = [3]
 
 #clock_slowdown_rate= 1
 clock_slowdown_rate=1
 
-timeout_time = 25
+timeout_time = 20
 #timeout_time = 80
 trial_ctr_c_time = 1
 
-show_rviz = True
-#show_rviz = False ## default
+#show_rviz = True
+show_rviz = False ## default
 
 with_rotation = True
 #with_rotation = False
@@ -92,7 +92,7 @@ insole_start = [
  [1.0, 0.4 , 0.4  ],   #
  [1.0, 0.5  , 0.25 ],  #
  [1.0, 0.5  , 0.3  ],  #
- [1.3, 0.7  , 0.25  ], #
+ [1.0, 1.0  , 0.05  ], #
  [1.0, 0.5  , 0.4   ], #
  [0.9, 0.0  , 0.7  ], #
  [0.9, 0.15 , 0.05  ],
@@ -101,8 +101,7 @@ insole_start = [
  ]
 
 ## this is will be subtracted to insole delay to make it possible to make insoles go faster than ik. value in seconds
-insole_starts_sooner = 1.2
-
+insole_starts_sooner = 1.1
 ik_start_delay = 6
 
 #####################################################################
