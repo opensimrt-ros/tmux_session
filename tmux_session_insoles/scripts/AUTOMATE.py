@@ -1,7 +1,7 @@
 #!/bin/env python3
 
-USE_TIMEOUT=True
-#USE_TIMEOUT=False
+#USE_TIMEOUT=True
+USE_TIMEOUT=False
 
 #trials_to_run = [0,1,2,3,4,5,6,7,8]
 trials_to_run = [3]
@@ -16,8 +16,8 @@ trial_ctr_c_time = 1
 #show_rviz = True
 show_rviz = False ## default
 
-with_rotation = True
-#with_rotation = False
+#with_rotation = True
+with_rotation = False
 
 weight=62.3
 height=1.70 #??
