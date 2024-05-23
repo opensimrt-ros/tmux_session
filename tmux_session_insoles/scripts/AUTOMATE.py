@@ -101,7 +101,7 @@ insole_start = [
  ]
 
 ## this is will be subtracted to insole delay to make it possible to make insoles go faster than ik. value in seconds
-insole_starts_sooner = 1
+insole_starts_sooner = 1.2
 
 ik_start_delay = 6
 
@@ -315,7 +315,8 @@ for i, (insole_file, ik_file, subjectnum) in enumerate(parameter_tuples):
             "$TIMEOUT_TIME":                str(real_timeout_time),
             "$TIMEOUT_BAG_FILE_SAVE_TIME":  str(real_timeout_time - 12),
             "$TIMEOUT_STO_SAVER_NODES":     str(real_timeout_time - 12),
-            "$SHOW_RVIZ":                   str(show_rviz)
+            "$SHOW_RVIZ":                   str(show_rviz),
+            "$SHOW_VIZ_OTHER":              "false",
             }
 
     diff_time_dict = {
