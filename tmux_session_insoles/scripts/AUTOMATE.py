@@ -1,7 +1,7 @@
 #!/bin/env python3
 
-#USE_TIMEOUT=True
-USE_TIMEOUT=False
+USE_TIMEOUT=True
+#USE_TIMEOUT=False
 
 #trials_to_run = [0,1,2,3,4,5,6,7,8]
 trials_to_run = [3]
@@ -101,7 +101,8 @@ insole_start = [
  ]
 
 ## this is will be subtracted to insole delay to make it possible to make insoles go faster than ik. value in seconds
-insole_starts_sooner = 1.1
+#insole_starts_sooner = 1.1
+insole_starts_sooner = 1.0 ## one is the normal value since we are adding it alway to insole_start and this will subtract the delay
 ik_start_delay = 6
 
 #####################################################################
