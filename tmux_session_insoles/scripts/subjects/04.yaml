@@ -1,0 +1,68 @@
+weight:         62.3
+  ##I actually don't know, look into records to be sure
+height:         1.70
+insole_size:    "S4"
+model_file:     "/srv/host_data/04_ew/S4_scaled.osim"
+  ## this is also incorrect. i need to generate an adequate moment arm library for this subject too
+moment_arm_lib: "/catkin_ws/devel/lib/Gait2392MomentArm_RW"
+data_path:      "/srv/host_data/04_ew/ViconData/Ruoli/Motion_Insole/RealTimeIkIDS4"
+## this is the initial IMU offset angle for subject 04, normally this should be zero
+base_imu_angle_offset: -60.87 ## this is the same for every measurement of this subject, but probably will need to be a list per action for other subjects
+actions:
+  walking:
+      ## the original IK for this subject is sort of wrong because of this initial angle offset. The source of this angle is unknown.
+      ik_files: null
+      imu_files:
+        - "2023-03-10-10-14-59walking011_imus_lower.sto"
+        - "2023-03-10-10-15-39walking022_imus_lower.sto"
+        - "2023-03-10-10-16-43walking033_imus_lower.sto"
+        - "2023-03-10-10-17-03walking044_imus_lower.sto"
+        - "2023-03-10-10-17-24walking055_imus_lower.sto"
+        - "2023-03-10-10-17-46walking066_imus_lower.sto"
+        - "2023-03-10-10-18-10walking077_imus_lower.sto"
+        - "2023-03-10-10-18-37walking088_imus_lower.sto"
+        - "2023-03-10-10-19-01walking099_imus_lower.sto"
+      insole_files:
+        ##This the ik file is missing put a null on it
+        - "walking01_header_corrected.txt"
+        - "walking02_header_corrected.txt"
+        - "walking03_header_corrected.txt"
+        - "walking04_header_corrected.txt"
+        - "walking05_header_corrected.txt"
+        - "walking06_header_corrected.txt"
+        - "walking07_header_corrected.txt"
+        - "walking08_header_corrected.txt"
+        - "walking09_header_corrected.txt"
+      insole_start:
+        - !!python/tuple [1.0, 0.4  , 0.4  ]
+        - !!python/tuple [1.0, 0.5  , 0.25 ]
+        - !!python/tuple [1.0, 0.5  , 0.3  ]
+        - !!python/tuple [1.0, 1.0  , 0.05 ]
+        - !!python/tuple [1.0, 0.5  , 0.4  ]
+        - !!python/tuple [0.9, 0.0  , 0.7  ]
+        - !!python/tuple [0.9, 0.15 , 0.05 ]
+        - !!python/tuple [1.0, 0.0  , 0.0  ]
+        - !!python/tuple [1.0, 0.9  , 0.6  ]
+  # If there is another action just fill the template below. the name "other_action" itself is ignored
+  other_action:
+      ik_files:
+        - ""
+        - ""
+        - ""
+      imu_files:
+        - ""
+        - ""
+        - ""
+      base_imu_angle_offset:
+        - 0
+        - 0
+        - 0
+      insole_files:
+        - ""
+        - ""
+        - ""
+      insole_start:
+        - !!python/tuple [0,0,0]
+        - !!python/tuple [0,0,0]
+        - !!python/tuple [0,0,0]
+

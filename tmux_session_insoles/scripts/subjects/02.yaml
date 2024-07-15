@@ -1,0 +1,50 @@
+weight: 54
+  ##I actually don't know, look into records to be sure
+height: 1.64
+model_file: ""
+moment_arm_lib: ""
+data_path: ""
+actions:
+  - walking:
+      ik_files:
+        - ""
+        - ""
+        - ""
+      imu_files:
+        - ""
+        - ""
+        - ""
+      base_imu_angle_offset:
+        - 0
+        - 0
+        - 0
+      insole_files:
+        - ""
+        - ""
+        - ""
+      insole_start:
+        - !!python/tuple [0,0,0]
+        - !!python/tuple [0,0,0]
+        - !!python/tuple [0,0,0]
+  - other_action:
+      ik_files:
+        - ""
+        - ""
+        - ""
+      imu_files:
+        - ""
+        - ""
+        - ""
+      base_imu_angle_offset:
+        - 0
+        - 0
+        - 0
+      insole_files:
+        - ""
+        - ""
+        - ""
+      insole_start:
+        - !!python/tuple [0,0,0]
+        - !!python/tuple [0,0,0]
+        - !!python/tuple [0,0,0]
+
