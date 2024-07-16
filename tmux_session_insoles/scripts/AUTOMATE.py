@@ -83,6 +83,9 @@ def my_run2(command_dic, which_trial):
     while(True):
         try:
             if rosgraph.is_master_online():
+                ## here we may want to set the variable for artificial clock before any other node starts
+                if not clock_slowdown_rate == 1:
+                    rospy.set_param("/use_sim_time", True)
                 break
         except:
             rospy.sleep(0.1)
@@ -132,14 +135,16 @@ revparse_dic ={"NOTICE":"this is no longer working. fix submodules .git and .git
 
 ###### COMMON trial variables
 
-#USE_TIMEOUT=True
-USE_TIMEOUT=False
+USE_TIMEOUT=True
+#USE_TIMEOUT=False
 
 #trials_to_run = [0,1,2,3,4,5,6,7,8]
 trials_to_run = [3]
 
+num_so_threads = 4
+
 #clock_slowdown_rate= 1
-clock_slowdown_rate=1
+clock_slowdown_rate=10
 
 timeout_time = 20
 #timeout_time = 80
@@ -260,7 +265,7 @@ for subjectnum in subject_list:
                     "$GRF_ORIGIN_Z_OFFSET":         str(0.0),
                     "$WRENCH_DELAY":                str(0.0),
                     "$IK_START_NSECS":              str(0),
-                    "$NUM_PROC_SO":                 str(4),
+                    "$NUM_PROC_SO":                 str(num_so_threads),
                     "$CLOCK_START_SECS":            str(epoch_time),
                     "$CLOCK_START_NSECS":           str(0),
                     "$SESSION_NAME":                "insole_%s"%subjectnum,
