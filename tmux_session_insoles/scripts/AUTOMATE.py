@@ -135,16 +135,16 @@ revparse_dic ={"NOTICE":"this is no longer working. fix submodules .git and .git
 
 ###### COMMON trial variables
 
-USE_TIMEOUT=True
-#USE_TIMEOUT=False
+#USE_TIMEOUT=True
+USE_TIMEOUT=False
 
 #trials_to_run = [0,1,2,3,4,5,6,7,8]
 trials_to_run = [3]
 
 num_so_threads = 4
 
-#clock_slowdown_rate= 1
-clock_slowdown_rate=10
+clock_slowdown_rate= 1
+#clock_slowdown_rate=10
 
 timeout_time = 20
 #timeout_time = 80
@@ -162,7 +162,7 @@ action="walking"
 default_urdf_model_height=1.75 #???
 ##we have to scale the urdf model...
 
-id_ik_delay=3.0 ## this is the id_ik_delay for ID
+id_ik_delay=5.0 ## this is the id_ik_delay for ID
 
 id_launcher="id_async_filtered.launch"
 #id_launcher="id_async_filtered_calcn_references.launch"
@@ -285,24 +285,26 @@ for subjectnum in subject_list:
 
             ##TODO: only save if we run it
             commands_yaml = os.path.join(directory_path, "tmux_execute%d.yaml"%i) 
-            with open(os.path.join(tsi_pkg_path, "config","GEN.yaml.template"), "rt") as fin:
-                    
-                with open(commands_yaml, "wt") as fout:
-                    for line in fin:
-                        for key, val in replace_strings_dict.items():
-                            #print(val)
-                            line = line.replace(add_curly_braces_to_string(key), val)
-                            line = line.replace(key, val)
-                        fout.write(line)
-            ## now run the yaml
-            startup_dic = {}    
-            with open(commands_yaml) as stream:
-                try:
-                    startup_dic = yaml.safe_load(stream)
-                except yaml.YAMLError as exc:
-                    print("failed at trial %d"%i )
-                    print(exc)
-                    exit(1)
+            if USE_TIMEOUT or i in trials_to_run: ## put the trials you want to check manually here and set USE_TIMEOUT to False
+                with open(os.path.join(tsi_pkg_path, "config","GEN.yaml.template"), "rt") as fin:
+
+                      ##if i in   
+                    with open(commands_yaml, "wt") as fout:
+                        for line in fin:
+                            for key, val in replace_strings_dict.items():
+                                #print(val)
+                                line = line.replace(add_curly_braces_to_string(key), val)
+                                line = line.replace(key, val)
+                            fout.write(line)
+                ## now run the yaml
+                startup_dic = {}    
+                with open(commands_yaml) as stream:
+                    try:
+                        startup_dic = yaml.safe_load(stream)
+                    except yaml.YAMLError as exc:
+                        print("failed at trial %d"%i )
+                        print(exc)
+                        exit(1)
             def normal_run():
                 #p = subprocess.Popen([os.path.join(tsc_pkg_path,"close_tmux_button.py")])
                 my_run2(startup_dic,which_trial)
