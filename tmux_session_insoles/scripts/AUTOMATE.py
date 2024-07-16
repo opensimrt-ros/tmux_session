@@ -124,7 +124,11 @@ def create_packages_rev_parse_strings(package_list):
 
 ## This assumes that you are not actively editing and commiting while this script is running.
 
-revparse_dic = create_packages_rev_parse_strings(packages_to_check)
+##TODO: this no longer works when i mount a part of the submodules, so inside the docker none of this is accessible. it isnt a big deal, you can still push things from the outside, but it may be a bit more cumbersome. 
+
+#revparse_dic = create_packages_rev_parse_strings(packages_to_check)
+
+revparse_dic ={"NOTICE":"this is no longer working. fix submodules .git and .gitmodules references to be links and do not mount the thing that they are linked to, but instead create an appropriate one inside the docker and keep the correct one outside of it. it will be a pain to keep working with submodules, you will definitely need a custom script to clone this."}
 
 ###### COMMON trial variables
 
@@ -189,6 +193,8 @@ else:
 for subjectnum in subject_list:
     base_directory = f'/srv/host_data/tmp/{subjectnum:02}/'
     source_directory=f"/tmp/{subjectnum:02}"
+    if not os.path.exists(source_directory):
+        os.makedirs(source_directory)
     with open("subjects/%02d.yaml"%subjectnum,"r") as a: 
         this_subject = yaml.load(a, Loader=yaml.loader.Loader)
     for action in action_list:
