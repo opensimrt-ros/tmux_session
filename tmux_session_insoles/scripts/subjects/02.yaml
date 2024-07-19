@@ -1,9 +1,9 @@
 weight: 54
   ##I actually don't know, look into records to be sure
 height: 1.64
-model_file: ""
-moment_arm_lib: ""
-data_path: ""
+model_file: "/srv/host_data/models/gait2392_simbody_RW.osim"
+moment_arm_lib: "/catkin_ws/devel/lib/libMomentArm_gait2392_simbody_RW.so"
+data_path: "/srv/host_data/02_ruoli/ViconData/Ruoli/Moticon_insole/RealTimekIDS2/"
 actions:
   - walking:
       ik_files:
