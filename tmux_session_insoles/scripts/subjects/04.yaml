@@ -3,8 +3,8 @@ weight:         62.3
 height:         1.70
 insole_size:    "S4"
 model_file:     "/srv/host_data/04_ew/S4_scaled.osim"
-  ## this is also incorrect. i need to generate an adequate moment arm library for this subject too
-moment_arm_lib: "/catkin_ws/devel/lib/libMomentArm_S4_scaled.so"
+  ## make sure it doesn't have the .so 
+moment_arm_lib: "/catkin_ws/devel/lib/libMomentArm_S4_scaled"
 data_path:      "/srv/host_data/04_ew/ViconData/Ruoli/Motion_Insole/RealTimeIkIDS4"
 ## this is the initial IMU offset angle for subject 04, normally this should be zero
 base_imu_angle_offset: -60.87 ## this is the same for every measurement of this subject, but probably will need to be a list per action for other subjects
