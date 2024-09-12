@@ -2,7 +2,9 @@
 
 import subprocess
 import tkinter as tk
+import time
 import rospy
+import os
 
 class CloseTmuxButtonFrame(tk.Frame):
     def __init__(self, parent, session_name):
@@ -19,15 +21,18 @@ class CloseTmuxButtonFrame(tk.Frame):
         self.submit.pack()
     def send_close(self):
         print("closing tmux")
+        s = os.getenv("WINDOW_TITLE")
+        mystring = '\033]2;%s\007'%(s)
         process = subprocess.Popen(self.close_commands,
-                     stdout=subprocess.PIPE, 
+                     stdout=subprocess.PIPE,
                      stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
+        subprocess.run(["echo",mystring])
         exit()
 
 if __name__ == "__main__":
     rospy.init_node("close_button", anonymous=True)
-    session_name = rospy.get_param("~session_name")
+    session_name = rospy.get_param("~session_name","")
     root = tk.Tk()
     root.title("Tmux session: "+session_name)
     root.geometry('200x200+1600+0')
